@@ -1,6 +1,4 @@
-/**
- * 日文语言包
- */
+﻿
 import { SITE_CONFIG } from '../../utils/baseConfig';
 
 export default {
@@ -56,12 +54,10 @@ export default {
     nextNotice: '次の通知',
     noticeCount: '{total}件中{current}件目',
     copied: 'クリップボードにコピー済み',
-    // 顶部菜单
     userCenter: 'ユーザーセンター',
     myWallet: 'マイウォレット',
     changePassword: 'パスワード変更',
     logoutText: 'ログアウト',
-    // 新增二维码加载提示
     loadingQRCode: 'QRコード生成中...',
     qrCodeLoadFailed: 'QRコード読み込み失敗',
     qrCodeGenerationFailed: 'QRコード生成失敗',
@@ -114,7 +110,6 @@ export default {
     captchaSuccess: '認証成功',
     captchaFailed: '認証失敗',
     
-    // 验证令牌相关
     loginNow: '今すぐログイン',
     resetNow: 'パスワードリセット',
     alreadyHaveAccount: 'アカウントをお持ちですか？',
@@ -132,14 +127,12 @@ export default {
     emailPrefixPlaceholder: 'メールプレフィックスを入力',
     newPasswordPlaceholder: '新しいパスワードを入力',
     requiresAuth: 'ログインが必要です',
-    // 验证码相关
     captcha: '認証',
     captchaRequired: '認証を完了してください',
     captchaInvalid: '認証失敗。もう一度お試しください',
     captchaExpired: '認証が期限切れです。再度認証してください',
     captchaError: '認証エラー。もう一度お試しください',
     captchaLoading: '認証コンポーネント読み込み中...',
-    // 令牌验证登录相关
     verifyTokenSuccess: 'トークン認証成功',
     verifyTokenFailed: 'トークン認証失敗、もう一度お試しください'
   },
@@ -220,7 +213,6 @@ export default {
     unlimited: '無制限',
     nextResetTime: '次回リセット時間',
     
-    // 订阅导入模态框
     importTitle: 'インポート方法選択',
     copySubscription: 'サブスクリプションアドレスをコピー',
     copySubscriptionDesc: 'サブスクリプションリンクをクリップボードにコピー',
@@ -240,23 +232,27 @@ export default {
     noClientsAvailable: 'このプラットフォームでは即時インポート方法がありません',
     clientNotInstalled: '対応クライアントがインストールされていません。サブスクリプションリンクをクリップボードにコピーしました'
   },
-  // 平台选择器国际化
   platforms: {
     ios: 'iOS',
     android: 'Android',
     windows: 'Windows',
     macos: 'MacOS'
   },
-  // 导航菜单国际化
   menu: {
     dashboard: 'ダッシュボード',
     shop: 'ストア',
     invite: '招待',
+    docs: 'ドキュメント',
+    tickets: 'チケット',
+    orders: '注文',
+    nodes: 'ノード',
+    traffic: 'トラフィック',
+    wallet: 'ウォレット',
+    profile: 'プロフィール',
     more: 'もっと見る',
     commission: 'リベート',
     hotSale: '人気'
   },
-  // 更多页面
   more: {
     title: '追加機能',
     description: 'さらに多くの機能とサービスを探る',
@@ -266,7 +262,6 @@ export default {
     getTechnicalSupport: '技術サポートを受ける',
     manageProfile: 'プロフィール管理'
   },
-  // 节点页面
   nodes: {
     title: 'ノードリスト',
     loading: 'ノード読み込み中...',
@@ -293,7 +288,6 @@ export default {
     userInfoError: 'ユーザー情報取得失敗',
     viewSubscribeLink: 'サブスクリプションリンクを見る'
   },
-  // 订单页面
   orders: {
     title: '注文リスト',
     loading: '注文読み込み中...',
@@ -323,21 +317,17 @@ export default {
       discounted: '割引済み',
       unknown: '不明な状態'
     },
-    // 添加路由标题支持
     confirmOrder: '注文確認',
     payment: '注文支払い',
   },
-  // 工单页面
   tickets: {
     title: 'チケットシステム',
     description: 'サポートチームに連絡',
     
-    // 搜索和新建
     searchPlaceholder: 'チケット検索...',
     newTicket: '新規チケット',
     createNew: 'チケット作成',
     
-    // 表单字段
     subject: '主題',
     subjectPlaceholder: 'チケットの主題を入力',
     message: '内容',
@@ -347,35 +337,29 @@ export default {
     levelMedium: '中',
     levelHigh: '高',
     
-    // 状态
     statusOpen: '処理中',
     statusClosed: '閉鎖済み',
     
-    // 提示文本
     noTickets: 'チケットなし',
     selectTicket: 'チケットを選択して詳細を見る',
     noMessages: 'メッセージ記録なし',
     loadingMessages: 'メッセージ読み込み中...',
     loadingTickets: 'チケット読み込み中...',
     
-    // 操作提示
     formIncomplete: 'チケット情報をすべて入力してください',
     createSuccess: 'チケット作成成功',
     createError: 'チケット作成失敗',
     fetchError: 'チケットリスト取得失敗',
     fetchDetailError: 'チケット詳細取得失敗',
     
-    // 回复相关
     replyPlaceholder: '返信内容を入力...',
     send: '送信',
     replySent: '返信送信済み',
     replyError: '返信送信失敗',
     
-    // 角色标识
     admin: 'カスタマーサービス',
     you: '私',
     
-    // 关闭工单
     closeTicket: 'チケット閉鎖',
     closeConfirmTitle: 'チケット閉鎖確認',
     closeConfirmText: 'このチケットを閉鎖しますか？閉鎖後は返信できません。',
@@ -384,25 +368,26 @@ export default {
     ticketClosed: 'このチケットは閉鎖済みで返信できません',
     closing: '閉鎖中...',
     
-    // 时间相关
     createdAt: '作成日',
     
-    // 小屏幕检测
     smallScreenNotice: '小さい画面のデバイスを検出',
     switchToMobile: 'より良い体験のためにモバイルビューに切り替えることを推奨',
     switchToMobileView: 'モバイルビューに切り替え',
     
-    // 大屏幕检测
     largeScreenNotice: '大きい画面を検出',
     switchToDesktop: 'より良い体験のためにデスクトップビューを使用することを推奨',
     switchToDesktopView: 'デスクトップビューに切り替え',
-    // 弹窗
     popup: {
       close_btn: '閉じる',
       wait_close_btn: '{seconds}秒後に閉じる'
     }
+    ,
+    upPictures: '画像をアップロード',
+    uploadingImages: 'アップロード中...',
+    uploadTipText: 'ここに画像をドラッグ＆ドロップするか、クリックしてアップロード',
+    uploadDescText: 'JPG、PNG、GIF 形式に対応、最大 5 MB',
+    uploadSuccess: '画像アップロード成功',
   },
-  // 用户中心
   profile: {
     title: 'ユーザーセンター',
     basicInfo: '基本情報',
@@ -414,10 +399,13 @@ export default {
     createdAt: '作成日',
     expiredAt: '有効期限',
     notifications: '通知設定',
+    accountSettings: 'アカウント設定',
     expireRemind: '有効期限リマインダー',
     trafficRemind: '流量リマインダー',
+    autoRenewal: '自動更新',
     expireRemindDesc: 'アカウント有効期限リマインダーメールを受信',
     trafficRemindDesc: '流量使い切りのリマインダーメールを受信',
+    autoRenewalDesc: '有効期限切れ時に自動的にプランを更新',
     security: 'セキュリティ設定',
     changePassword: 'パスワード変更',
     changePasswordTitle: 'アカウントパスワード変更',
@@ -458,14 +446,12 @@ export default {
     confirmLogout: 'ログアウト確認',
     logoutDesc: 'ログアウトしますか？',
     logout: 'ログアウト',
-    // 新增近期登录设备相关翻译
     recentDevices: '最近のログイン機器',
     noDevices: 'ログイン記録なし',
     unknownDevice: '不明なデバイス',
     unknownIP: '不明なIP',
     unknownBrowser: '不明なブラウザ',
     sessionError: 'ログイン記録取得失敗',
-    // Telegram相关翻译
     telegramGroup: 'Telegramグループ',
     telegramBot: 'Telegramボット',
     bindTelegram: 'Telegramボット連携',
@@ -478,7 +464,6 @@ export default {
     telegram: 'Telegram通信',
     telegramError: 'Telegram情報取得失敗'
   },
-  // 右键菜单
   contextMenu: {
     refresh: 'ページ更新',
     back: '前のページに戻る',
@@ -486,7 +471,6 @@ export default {
     copy: 'コピー',
     paste: '貼り付け'
   },
-  // 客服系统
   service: {
     title: 'オンラインカスタマーサービス',
     description: 'カスタマーサービスチームとリアルタイムで連絡',
@@ -555,7 +539,6 @@ export default {
       devices_desc: '複数デバイスの同時使用に対応'
     },
     config_error: 'ストア設定取得失敗',
-    // 弹窗相关
     popup: {
       close_btn: '了解',
       wait_close_btn: '{seconds}秒お待ちください'
@@ -666,7 +649,6 @@ export default {
       activate: 'アクティブ化待ち'
     }
   },
-  // 邀请页面
   invite: {
     title: 'マイリベート',
     description: '友達を招待して登録させ、コミッションを獲得。',
@@ -794,10 +776,10 @@ export default {
       }
     }
   },
-  // 文档页面相关翻译
   docs: {
     title: 'ドキュメントセンター',
     searchPlaceholder: 'ドキュメント検索...',
+    noAccessPrompt: '現在有効なプランがありません。プランを購入すると本セクションの内容を閲覧できます',
     loading: 'ドキュメント読み込み中...',
     retry: '再試行',
     clearSearch: '検索クリア',
@@ -817,7 +799,6 @@ export default {
       description: '使用と設定に関する詳細なドキュメントを検索・閲覧'
     }
   },
-  // 浏览器限制页面
   browserRestricted: {
     title: 'ブラウザアクセス制限',
     subtitle: '現在のブラウザはサポートされていません',
@@ -843,7 +824,6 @@ export default {
       Unknown: '不明なブラウザ'
     }
   },
-  // 流量明细页面
   trafficLog: {
     title: '流量明細',
     description: '流量使用状況の詳細記録を閲覧',

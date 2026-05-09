@@ -1,6 +1,4 @@
-/**
- * 俄文语言包
- */
+﻿
 
 import { SITE_CONFIG } from '../../../utils/baseConfig';
 
@@ -64,10 +62,8 @@ export default {
     requiresAuth: 'Требуется вход',
     domainNotAuthorized: 'Домен не авторизован',
     contactAdmin: 'Свяжитесь с администратором для получения авторизации',
-    // 验证码相关
     captcha: 'CAPTCHA-проверка',
     captchaRequired: 'Пройдите CAPTCHA-проверку',
-    // 令牌验证登录相关
     verifyTokenSuccess: 'Проверка токена успешна',
     verifyTokenFailed: 'Ошибка проверки токена, попробуйте снова'
   },
@@ -107,7 +103,6 @@ export default {
     sendCodeFailed: 'Ошибка отправки кода подтверждения',
     configLoadFailed: 'Ошибка загрузки конфигурации, обновите страницу'
   },
-  // 浏览器限制页面
   browserRestricted: {
     title: 'Ограничение доступа браузера',
     subtitle: 'Текущий браузер не поддерживается',
@@ -133,13 +128,11 @@ export default {
       Unknown: 'Неизвестный браузер'
     }
   },
-  // Landing page
   landing: {
-    mainText: SITE_CONFIG.landingText['ru'] || 'Исследуйте бесконечные возможности глобальной сети',
+    mainText: SITE_CONFIG.landingText['ru-RU'] || 'Исследуйте бесконечные возможности глобальной сети',
     scrollText: 'Прокрутите вниз для входа',
     exploreButton: 'Начать исследование'
   },
-  // 右键菜单
   contextMenu: {
     refresh: 'Обновить страницу',
     back: 'Вернуться назад',
@@ -147,7 +140,6 @@ export default {
     copy: 'Копировать',
     paste: 'Вставить'
   },
-  // 客服系统
   service: {
     title: 'Онлайн-поддержка',
     description: 'Общайтесь с нашей командой поддержки в реальном времени',

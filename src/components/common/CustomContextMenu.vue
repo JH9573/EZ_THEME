@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <transition name="context-menu">
     <div 
       v-if="show" 
@@ -59,30 +59,26 @@ export default {
   setup() {
     const show = ref(false);
     const position = ref({ x: 0, y: 0 });
+    const selectedText = ref('');
     const router = useRouter();
     
-    // 是否可以复制、导航
     const canCopy = ref(false);
     const canRefresh = ref(true);
     const canNavigate = ref(true);
     
-    // 处理右键点击事件
     const handleContextMenu = (event) => {
       event.preventDefault();
       
-      // 检查是否可以复制
-      // 如果选中了文本或在输入框中，则可以复制
       const selection = window.getSelection();
+      selectedText.value = selection.toString();
       canCopy.value = selection.toString().length > 0;
       
-      // 计算菜单位置，防止超出视窗
       const x = Math.min(event.clientX, window.innerWidth - 200);
       const y = Math.min(event.clientY, window.innerHeight - 160);
       
       position.value = { x, y };
       show.value = true;
       
-      // 添加菜单展开动画类
       setTimeout(() => {
         const menuItems = document.querySelectorAll('.menu-item');
         menuItems.forEach((item, index) => {
@@ -93,12 +89,10 @@ export default {
       }, 50);
     };
     
-    // 处理点击外部关闭菜单
     const handleClickOutside = () => {
       if (show.value) {
         show.value = false;
         
-        // 移除动画类
         const menuItems = document.querySelectorAll('.menu-item');
         menuItems.forEach(item => {
           item.classList.remove('appear');
@@ -106,12 +100,10 @@ export default {
       }
     };
     
-    // 复制功能
     const handleCopy = async () => {
       try {
-        const selection = window.getSelection();
-        if (selection.toString().length > 0) {
-          await navigator.clipboard.writeText(selection.toString());
+        if (selectedText.value) {
+          await navigator.clipboard.writeText(selectedText.value);
         }
       } catch (err) {
         console.error('复制失败:', err);
@@ -119,37 +111,28 @@ export default {
       handleClickOutside();
     };
     
-    // 刷新页面
     const handleRefresh = () => {
       window.location.reload();
     };
     
-    // 返回上一页
     const handleBack = () => {
       router.back();
       handleClickOutside();
     };
     
-    // 前进到下一页
     const handleForward = () => {
       router.forward();
       handleClickOutside();
     };
     
     onMounted(() => {
-      // 添加右键和点击事件监听
       document.addEventListener('contextmenu', handleContextMenu);
       document.addEventListener('click', handleClickOutside);
-      
-      // 窗口大小改变时隐藏菜单
       window.addEventListener('resize', handleClickOutside);
-      
-      // 滚动时隐藏菜单
       window.addEventListener('scroll', handleClickOutside);
     });
     
     onUnmounted(() => {
-      // 移除事件监听
       document.removeEventListener('contextmenu', handleContextMenu);
       document.removeEventListener('click', handleClickOutside);
       window.removeEventListener('resize', handleClickOutside);
@@ -248,7 +231,7 @@ export default {
   color: var(--text-color);
 }
 
-/* 动画效果 */
+
 .context-menu-enter-active,
 .context-menu-leave-active {
   transition: transform 0.2s ease, opacity 0.2s ease;
@@ -260,7 +243,7 @@ export default {
   opacity: 0;
 }
 
-/* 深色模式适配 */
+
 :deep(.dark-theme) {
   .custom-context-menu {
     background-color: rgba(30, 30, 32, 0.8);

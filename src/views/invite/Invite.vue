@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="account-container">
     <!-- 自定义确认弹窗 -->
     <transition name="modal">
@@ -75,7 +75,7 @@
             <IconWallet :size="32" />
           </div>
           <div class="stats-info">
-              <div class="stats-value">{{ currencySymbol }}{{ inviteStats.availableCommission }}</div>
+              <div class="stats-value">{{ currencySymbol }}{{ inviteStats.validCommission }}</div>
             <div class="stats-label">{{ $t('invite.stats.availableCommission') }}</div>
           </div>
         </div>
@@ -601,6 +601,7 @@ import { useI18n } from 'vue-i18n';
 import { ref, computed, onMounted, onUnmounted, reactive, nextTick } from 'vue';
 import { useToast } from '@/composables/useToast';
 import { INVITE_CONFIG } from '@/utils/baseConfig';
+import { buildDisplayPageNumbers, buildInviteLink, formatInviteCodeDate, formatInviteDate } from './composables/invitePresentation';
 import { getInviteData, getInviteDetails, getCommissionConfig, generateInviteCode, transferCommission, withdrawCommission } from '@/api/invite';
 import {
   IconUsers,
@@ -659,25 +660,20 @@ export default {
     const { showToast } = useToast();
     const { t } = useI18n();
     
-    // 加载状态
     const loading = reactive({
       inviteData: true,
       inviteDetails: true,
       commConfig: true
     });
     
-    // 创建邀请码状态
     const creatingCode = ref(false);
     
-    // 货币配置
     const currency = ref('CNY');
     const currencySymbol = ref('¥');
     
-    // 邀请码列表
     const inviteCodes = ref([]);
     const selectedCodeIndex = ref(0);
     
-    // 统计数据
     const inviteStats = reactive({
       registeredUsers: 0,
       validCommission: 0,
@@ -686,35 +682,28 @@ export default {
       availableCommission: 0
     });
     
-    // 邀请记录
     const inviteRecords = ref([]);
     
-    // 添加分页相关变量
     const currentPage = ref(1);
-    // 确保使用config.js中配置的每页条数，config.js中的配置会覆盖默认值
     const pageSize = ref(INVITE_CONFIG.recordsPerPage || 10);
     const totalRecords = ref(0);
     
-    // 添加分页大小选择相关变量
     const pageSizeOptions = [10, 20, 50, 100, 200];
     const showPageSizeDropdown = ref(false);
     
-    // 切换分页大小选择下拉框显示状态
     const togglePageSizeDropdown = () => {
       showPageSizeDropdown.value = !showPageSizeDropdown.value;
     };
     
-    // 选择分页大小
     const selectPageSize = (size) => {
       if (pageSize.value !== size) {
         pageSize.value = size;
-        currentPage.value = 1; // 切换每页显示数量时重置到第一页
-        fetchInviteDetails(1); // 重新获取数据
+        currentPage.value = 1; 
+        fetchInviteDetails(1); 
       }
       showPageSizeDropdown.value = false;
     };
     
-    // 点击外部区域关闭下拉框
     const closePageSizeDropdownOnClickOutside = (event) => {
       const dropdown = document.querySelector('.page-size-selector');
       if (dropdown && !dropdown.contains(event.target)) {
@@ -722,58 +711,29 @@ export default {
       }
     };
     
-    // 返佣记录直接使用API返回的数据，不需要本地分页
     const paginatedRecords = computed(() => inviteRecords.value);
     
-    // 计算总页数
     const totalPages = computed(() => {
       return Math.ceil(totalRecords.value / pageSize.value);
     });
     
-    // 计算应该显示哪些页码
-    const displayPageNumbers = computed(() => {
-      const pages = [];
-      // 根据屏幕宽度决定显示的页码数量
-      const maxVisiblePages = isMobile.value ? 1 : 3; // 手机上最多显示1个页码按钮，桌面端显示3个
-      
-      if (totalPages.value <= maxVisiblePages) {
-        // 如果总页数少于或等于最大可见页数，显示所有页码
-        for (let i = 1; i <= totalPages.value; i++) {
-          pages.push(i);
-        }
-      } else {
-        // 否则，显示当前页附近的页码
-        let startPage = Math.max(currentPage.value - Math.floor(maxVisiblePages / 2), 1);
-        let endPage = startPage + maxVisiblePages - 1;
-        
-        if (endPage > totalPages.value) {
-          endPage = totalPages.value;
-          startPage = Math.max(endPage - maxVisiblePages + 1, 1);
-        }
-        
-        for (let i = startPage; i <= endPage; i++) {
-          pages.push(i);
-        }
-      }
-      
-      return pages;
-    });
+    const displayPageNumbers = computed(() => buildDisplayPageNumbers({
+      currentPage: currentPage.value,
+      totalPages: totalPages.value,
+      isMobile: isMobile.value
+    }));
     
-    // 添加分页功能方法
     const handlePageChange = (page) => {
-      // 确保页码在有效范围内
       if (page < 1) {
         page = 1;
       } else if (page > totalPages.value) {
         page = totalPages.value;
       }
       
-      // 只有当页码与当前页不同时才更新
       if (page !== currentPage.value) {
         currentPage.value = page;
         fetchInviteDetails(page);
         
-        // 滚动表格到可视区域
         nextTick(() => {
           const tableElement = document.querySelector('.records-table-wrapper');
           if (tableElement) {
@@ -783,27 +743,13 @@ export default {
       }
     };
     
-    // 计算邀请链接
-    const inviteLink = computed(() => {
-      if (inviteCodes.value.length === 0 || selectedCodeIndex.value >= inviteCodes.value.length) {
-        return '';
-      }
-      const code = inviteCodes.value[selectedCodeIndex.value].code;
-      
-      // 根据配置决定使用哪个域名
-      if (INVITE_CONFIG.inviteLinkConfig && INVITE_CONFIG.inviteLinkConfig.linkMode === 'custom') {
-        // 使用自定义域名
-        const customDomain = INVITE_CONFIG.inviteLinkConfig.customDomain;
-        // 确保域名末尾没有斜杠
-        const domain = customDomain.endsWith('/') ? customDomain.slice(0, -1) : customDomain;
-        return `${domain}/#/register?code=${code}`;
-      } else {
-        // 使用当前站点域名（自动模式）
-        return `${window.location.origin}/#/register?code=${code}`;
-      }
-    });
+    const inviteLink = computed(() => buildInviteLink({
+      codes: inviteCodes.value,
+      selectedIndex: selectedCodeIndex.value,
+      config: INVITE_CONFIG,
+      origin: window.location.origin
+    }));
     
-    // 创建邀请码
     const createInviteCode = async () => {
       if (creatingCode.value) return;
       
@@ -813,7 +759,6 @@ export default {
         const res = await generateInviteCode();
         
         if (res.data) {
-          // 刷新邀请数据
           await fetchInviteData();
           handleSuccess(t('invite.inviteLink.created'));
         }
@@ -824,7 +769,6 @@ export default {
       }
     };
     
-    // 复制邀请链接
     const copyInviteLink = () => {
       if (!inviteLink.value) return;
       
@@ -833,7 +777,6 @@ export default {
           handleSuccess(t('invite.inviteLink.copied'));
         })
         .catch(() => {
-          // 如果剪贴板API不可用，使用传统方法
           const textarea = document.createElement('textarea');
           textarea.value = inviteLink.value;
           textarea.style.position = 'fixed';
@@ -856,12 +799,10 @@ export default {
         });
     };
     
-    // 确认弹窗状态
     const showConfirmModal = ref(false);
     const confirmModalMessage = ref('');
     const pendingAction = ref(null);
     
-    // 确认操作
     const confirmAction = () => {
       if (pendingAction.value) {
         pendingAction.value();
@@ -869,24 +810,19 @@ export default {
       showConfirmModal.value = false;
     };
     
-    // 取消确认
     const cancelConfirmation = () => {
       showConfirmModal.value = false;
       pendingAction.value = null;
     };
     
-    // 分享功能
     const shareToWechat = () => {
-      // 微信分享链接
       if (!inviteLink.value) {
         showToast(t('invite.share.noLinkAvailable'), 'error');
         return;
       }
       
-      // 微信分享需要在微信内部使用，这里提供二维码扫描方案
       const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(inviteLink.value)}`;
       
-      // 创建并显示二维码弹窗
       const win = window.open('', '_blank', 'width=600,height=400');
       win.document.write(`
         <html>
@@ -913,7 +849,6 @@ export default {
         showToast(t('invite.share.noLinkAvailable'), 'error');
         return;
       }
-      // 使用Twitter的Web Intent API
       window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(t('invite.share.shareDescription'))}&url=${encodeURIComponent(inviteLink.value)}`, '_blank');
     };
     
@@ -922,55 +857,37 @@ export default {
         showToast(t('invite.share.noLinkAvailable'), 'error');
         return;
       }
-      // 使用Telegram的分享URL
       window.open(`https://t.me/share/url?url=${encodeURIComponent(inviteLink.value)}&text=${encodeURIComponent(t('invite.share.shareDescription'))}`, '_blank');
     };
     
-    // 添加QQ分享功能
     const shareToQQ = () => {
       if (!inviteLink.value) {
         showToast(t('invite.share.noLinkAvailable'), 'error');
         return;
       }
-      // 使用QQ的分享链接
       window.open(`https://connect.qq.com/widget/shareqq/index.html?url=${encodeURIComponent(inviteLink.value)}&title=${encodeURIComponent(t('invite.share.shareTitle'))}&desc=${encodeURIComponent(t('invite.share.shareDescription'))}`, '_blank');
     };
     
-    // 刷新记录
     const refreshRecords = () => {
       if (loading.inviteDetails) return;
       
       showToast(t('invite.records.refreshingData'), 'info');
-      currentPage.value = 1; // 重置到第一页
+      currentPage.value = 1; 
       fetchInviteDetails(1);
     };
     
-    // 格式化日期
-    const formatDate = (timestamp) => {
-      if (!timestamp) return '-';
-      const date = new Date(timestamp * 1000);
-      // 格式化为 YYYY-MM-DD HH:MM
-      const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const day = String(date.getDate()).padStart(2, '0');
-      const hours = String(date.getHours()).padStart(2, '0');
-      const minutes = String(date.getMinutes()).padStart(2, '0');
-      
-      return `${year}-${month}-${day} ${hours}:${minutes}`;
-    };
+    const formatDate = formatInviteDate;
     
-    // 获取佣金状态样式
     const getStatusClass = (status) => {
       switch (status) {
-        case 0: return 'waiting';  // 待确认
-        case 1: return 'pending';  // 发放中
-        case 2: return 'success';  // 有效
-        case 3: return 'danger';   // 无效
+        case 0: return 'waiting';  
+        case 1: return 'pending';  
+        case 2: return 'success';  
+        case 3: return 'danger';   
         default: return 'waiting';
       }
     };
     
-    // 获取佣金状态文本
     const getStatusText = (status) => {
       switch (status) {
         case 0: return t('invite.records.status.waiting');
@@ -981,7 +898,6 @@ export default {
       }
     };
     
-    // 获取邀请数据
     const fetchInviteData = async () => {
       loading.inviteData = true;
       try {
@@ -990,10 +906,10 @@ export default {
           inviteCodes.value = res.data.codes || [];
           if (res.data.stat) {
             inviteStats.registeredUsers = res.data.stat[0] || 0;
-            inviteStats.validCommission = ((res.data.stat[1] || 0) / 100).toFixed(2); // 分转元并保留2位小数
-            inviteStats.pendingCommission = ((res.data.stat[2] || 0) / 100).toFixed(2); // 分转元并保留2位小数
+            inviteStats.validCommission = ((res.data.stat[1] || 0) / 100).toFixed(2); 
+            inviteStats.pendingCommission = ((res.data.stat[2] || 0) / 100).toFixed(2); 
             inviteStats.commissionRate = res.data.stat[3] || 0;
-            inviteStats.availableCommission = ((res.data.stat[4] || 0) / 100).toFixed(2); // 分转元并保留2位小数
+            inviteStats.availableCommission = ((res.data.stat[4] || 0) / 100).toFixed(2); 
           }
         }
       } catch (err) {
@@ -1004,17 +920,13 @@ export default {
       }
     };
     
-    // 获取邀请明细
     const fetchInviteDetails = async (page = 1) => {
       loading.inviteDetails = true;
       try {
-        // 使用当前选择的每页显示数量（确保至少为10，因为API限制）
-        // 优先使用用户选择的pageSize，这个优先级高于config.js中的设置
         const recordsPerPage = Math.max(pageSize.value, 10);
         const res = await getInviteDetails(page, recordsPerPage);
         
         if (res.data) {
-          // 处理金额数据，将分转为元
           inviteRecords.value = Array.isArray(res.data) ? res.data.map(record => ({
             id: record.id,
             trade_no: record.trade_no,
@@ -1022,10 +934,9 @@ export default {
             user: record.user || null,
             amount: record.order_amount ? (record.order_amount / 100).toFixed(2) : '0.00',
             commission_amount: record.get_amount ? (record.get_amount / 100).toFixed(2) : '0.00',
-            commission_status: 1 // 这里是有效的佣金，所以状态为已确认
+            commission_status: 1 
           })) : [];
           
-          // 更新总记录数
           totalRecords.value = res.total || inviteRecords.value.length;
         } else {
           inviteRecords.value = [];
@@ -1041,7 +952,6 @@ export default {
       }
     };
     
-    // 获取佣金配置
     const fetchCommConfig = async () => {
       loading.commConfig = true;
       try {
@@ -1050,18 +960,12 @@ export default {
           currency.value = res.data.currency || 'CNY';
           currencySymbol.value = res.data.currency_symbol || '¥';
           
-          // 修复withdraw_close的处理
-          // 将API返回的withdraw_close值转为数字类型进行比较
-          // 如果返回的withdraw_close为0，则表示开启提现功能
           withdrawClose.value = Number(res.data.withdraw_close);
-          // console.log('API返回的withdraw_close:', res.data.withdraw_close);
-          // console.log('转换后的withdrawClose.value:', withdrawClose.value);
           
-          withdrawMethods.value = res.data.withdraw_methods || []; // 提现方式列表
+          withdrawMethods.value = res.data.withdraw_methods || []; 
           
-          // 解析最小提现金额，如果存在的话
           if (res.data.min_withdraw_amount) {
-            minWithdrawAmount.value = parseFloat(res.data.min_withdraw_amount) / 100; // 分转元
+            minWithdrawAmount.value = parseFloat(res.data.min_withdraw_amount) / 100; 
           }
         }
       } catch (err) {
@@ -1071,52 +975,37 @@ export default {
       }
     };
     
-    // 切换到前一个邀请码
     const prevInviteCode = () => {
       if (inviteCodes.value.length > 1) {
         selectedCodeIndex.value = (selectedCodeIndex.value - 1 + inviteCodes.value.length) % inviteCodes.value.length;
       }
     };
     
-    // 切换到后一个邀请码
     const nextInviteCode = () => {
       if (inviteCodes.value.length > 1) {
         selectedCodeIndex.value = (selectedCodeIndex.value + 1) % inviteCodes.value.length;
       }
     };
     
-    // 在 script 部分添加日期格式化函数
-    const formatCodeDate = (timestamp) => {
-      if (!timestamp) return '';
-      const date = new Date(timestamp * 1000);
-      const year = date.getFullYear();
-      const month = date.getMonth() + 1;
-      const day = date.getDate();
-      return `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
-    };
+    const formatCodeDate = formatInviteCodeDate;
     
-    // 新增的 showTransferCard 和 transferAmount 状态
     const showTransferCardState = ref(false);
     const transferAmount = ref(0);
     const transferError = ref('');
     const transferLoading = ref(false);
     const isTransferDisabled = computed(() => transferAmount.value <= 0 || transferAmount.value > inviteStats.availableCommission);
     
-    // 切换转账弹窗显示状态
     const toggleTransferCard = () => {
-      // 如果提现弹窗正在显示，先关闭它
       if (showWithdrawCard.value) {
         pendingCardAction.value = 'transfer';
         showWithdrawCard.value = false;
       } else {
         showTransferCardState.value = true;
-        // 重置值
         transferAmount.value = '';
         transferError.value = '';
       }
     };
     
-    // 验证划转金额
     const validateTransferAmount = () => {
       transferError.value = '';
       
@@ -1133,29 +1022,23 @@ export default {
       return true;
     };
     
-    // 确认划转
     const confirmTransfer = async () => {
       if (!validateTransferAmount()) return;
       
       transferLoading.value = true;
       
       try {
-        // 将金额转换为分 (前端的元转为后端需要的分)
         const amountInCents = Math.round(parseFloat(transferAmount.value) * 100);
         const res = await transferCommission(amountInCents);
         
         if (res.data === true) {
-          // 重置表单
           transferAmount.value = 0;
           transferError.value = '';
           
-          // 显示成功消息
           handleSuccess(t('invite.transfer.success'));
           
-          // 刷新数据
           await fetchInviteData();
           
-          // 关闭卡片
           showTransferCardState.value = false;
         } else {
           transferError.value = res.message || t('invite.transfer.failure');
@@ -1168,20 +1051,16 @@ export default {
       }
     };
     
-    // 切换提现弹窗显示状态
     const toggleWithdrawCard = () => {
-      // 如果转账弹窗正在显示，先关闭它
       if (showTransferCardState.value) {
         pendingCardAction.value = 'withdraw';
         showTransferCardState.value = false;
       } else {
         showWithdrawCard.value = true;
-        // 重置值
         withdrawAccount.value = '';
         withdrawAmount.value = '';
         withdrawError.value = '';
         
-        // 如果有可用的提现方式，默认选择第一个
         if (withdrawMethods.value.length > 0) {
           selectedWithdrawMethod.value = withdrawMethods.value[0];
         } else {
@@ -1190,25 +1069,21 @@ export default {
       }
     };
     
-    // 关闭提现弹窗
     const closeWithdrawCard = () => {
       showWithdrawCard.value = false;
       withdrawError.value = '';
     };
     
-    // 切换下拉框显示
     const toggleMethodDropdown = () => {
       if (withdrawMethods.value.length === 0) return;
       showMethodDropdown.value = !showMethodDropdown.value;
     };
     
-    // 选择提现方式
     const selectWithdrawMethod = (method) => {
       selectedWithdrawMethod.value = method;
       showMethodDropdown.value = false;
     };
     
-    // 点击外部关闭下拉框
     const closeDropdownOnClickOutside = (event) => {
       const dropdown = document.querySelector('.custom-select');
       if (dropdown && !dropdown.contains(event.target)) {
@@ -1216,14 +1091,12 @@ export default {
       }
     };
     
-    // 提交提现请求
     const submitWithdraw = async () => {
       if (!withdrawAccount.value || !selectedWithdrawMethod.value) {
         withdrawError.value = t('validation.required', { field: t('invite.withdraw.account') });
         return;
       }
       
-      // 检查提现金额是否有效
       const amount = parseFloat(withdrawAmount.value);
       if (isNaN(amount) || amount <= 0) {
         withdrawError.value = t('invite.withdraw.invalidAmount');
@@ -1231,14 +1104,12 @@ export default {
         return;
       }
       
-      // 检查提现金额是否超过可用佣金
       if (amount > parseFloat(inviteStats.availableCommission)) {
         withdrawError.value = t('invite.withdraw.insufficientFunds');
         showToast(withdrawError.value, 'error');
         return;
       }
       
-      // 检查是否达到最小提现金额
       if (amount < minWithdrawAmount.value && minWithdrawAmount.value > 0) {
         withdrawError.value = t('invite.withdraw.belowMinAmount', { 
           amount: currencySymbol.value + minWithdrawAmount.value + currency.value 
@@ -1250,10 +1121,8 @@ export default {
       withdrawLoading.value = true;
       
       try {
-        // 将金额转换为分 (前端的元转为后端需要的分)
         const amountInCents = Math.round(amount * 100);
         
-        // 调用提现API，注意参数顺序和名称
         const res = await withdrawCommission(
           amountInCents,
           withdrawAccount.value,
@@ -1261,27 +1130,21 @@ export default {
         );
         
         if (res.data === true) {
-          // 重置表单
           withdrawAccount.value = '';
           withdrawAmount.value = '';
           withdrawError.value = '';
           
-          // 显示成功消息
           handleSuccess(t('invite.withdraw.success'));
           
-          // 刷新数据
           await fetchInviteData();
           
-          // 关闭弹窗
           showWithdrawCard.value = false;
         } else {
-          // 显示API返回的错误信息
           withdrawError.value = res.message || t('invite.withdraw.failure');
           showToast(withdrawError.value, 'error');
         }
       } catch (error) {
         console.error('提现请求错误:', error);
-        // 处理错误响应，优先显示API返回的具体错误信息
         if (error.response && error.response.data && error.response.data.message) {
           withdrawError.value = error.response.data.message;
         } else if (error.message) {
@@ -1295,78 +1158,60 @@ export default {
       }
     };
 
-    // 检测是否为移动设备
-    const isMobile = ref(false); // 默认为桌面设备
+    const isMobile = ref(false); 
     
-    // 客户端初始化函数
     const initClientSideState = () => {
-      // 确保在客户端环境中执行
       if (typeof window !== 'undefined') {
         isMobile.value = window.innerWidth <= 768;
       }
     };
     
-    // 监听屏幕尺寸变化以更新页码显示
     const handleResize = () => {
-      // 确保在客户端环境中执行
       if (typeof window !== 'undefined') {
-        // 更新移动设备状态
         isMobile.value = window.innerWidth <= 768;
-        // 强制重新计算displayPageNumbers
         nextTick(() => {
-          // 触发计算属性重新计算
           displayPageNumbers.value;
         });
       }
     };
     
-    // 监听点击事件关闭下拉框
     onMounted(() => {
-      // 初始化客户端状态
       initClientSideState();
       
-      // 这是第一个onMounted
       document.addEventListener('click', closeDropdownOnClickOutside);
       document.addEventListener('click', closePageSizeDropdownOnClickOutside);
       
-      // 添加窗口大小变化监听（确保在客户端环境）
       if (typeof window !== 'undefined') {
         window.addEventListener('resize', handleResize);
       }
       
       fetchInviteData();
-      // 初始加载第一页数据
       currentPage.value = 1;
       fetchInviteDetails(1);
       fetchCommConfig();
       
-      // 更新pageSize的值为配置中的值
       pageSize.value = INVITE_CONFIG.recordsPerPage || 10;
     });
     
-    // 组件卸载时移除事件监听器
     onUnmounted(() => {
       document.removeEventListener('click', closeDropdownOnClickOutside);
       document.removeEventListener('click', closePageSizeDropdownOnClickOutside);
       window.removeEventListener('resize', handleResize);
     });
     
-    // 提现相关状态
-    const withdrawClose = ref(1); // 默认关闭提现
-    const withdrawMethods = ref([]); // 提现方式列表
-    const showWithdrawCard = ref(false); // 提现卡片显示状态
-    const withdrawAccount = ref(''); // 提现账号
-    const withdrawAmount = ref(''); // 提现金额
-    const selectedWithdrawMethod = ref(''); // 选中的提现方式
-    const showMethodDropdown = ref(false); // 下拉框显示状态
-    const withdrawError = ref(''); // 提现错误信息
-    const withdrawLoading = ref(false); // 提现加载状态
-    const minWithdrawAmount = ref(0); // 最小提现金额
+    const withdrawClose = ref(1); 
+    const withdrawMethods = ref([]); 
+    const showWithdrawCard = ref(false); 
+    const withdrawAccount = ref(''); 
+    const withdrawAmount = ref(''); 
+    const selectedWithdrawMethod = ref(''); 
+    const showMethodDropdown = ref(false); 
+    const withdrawError = ref(''); 
+    const withdrawLoading = ref(false); 
+    const minWithdrawAmount = ref(0); 
     
-    // 新增状态用于控制卡片切换
     const pendingCardAction = ref(null);
     
-    // 划转卡片隐藏完成后的回调
     const onTransferCardHidden = () => {
       if (pendingCardAction.value === 'withdraw') {
         pendingCardAction.value = null;
@@ -1385,7 +1230,6 @@ export default {
       }
     };
     
-    // 提现卡片隐藏完成后的回调
     const onWithdrawCardHidden = () => {
       if (pendingCardAction.value === 'transfer') {
         pendingCardAction.value = null;
@@ -1404,12 +1248,10 @@ export default {
       }
     };
     
-    // 处理成功消息显示（使用 i18n）
     const handleSuccess = (message) => {
       showToast(message, 'success');
     };
     
-    // 处理错误消息显示（使用 i18n）
     const handleError = (error) => {
       console.error('Error:', error);
       const message = error.response?.message || t('common.error');
@@ -1469,20 +1311,20 @@ export default {
       onWithdrawCardHidden,
       handleSuccess,
       handleError,
-      t, // 添加 t 函数到模板中使用
+      t, 
       currentPage,
       pageSize,
       totalRecords,
       paginatedRecords,
       handlePageChange,
       totalPages,
-      displayPageNumbers, // 添加新的计算属性到返回对象
+      displayPageNumbers, 
       pageSizeOptions,
       showPageSizeDropdown,
       togglePageSizeDropdown,
       selectPageSize,
       closePageSizeDropdownOnClickOutside,
-      isMobile // 添加移动设备状态
+      isMobile 
     };
   }
 };
@@ -1512,7 +1354,7 @@ export default {
     border: 1px solid var(--border-color);
     transition: all 0.3s ease;
     position: relative;
-    overflow: visible; // 允许溢出显示
+    overflow: visible; 
     
     &:hover {
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
@@ -1703,7 +1545,7 @@ export default {
     transition: all 0.2s ease;
     box-shadow: 0 2px 10px rgba(var(--theme-color-rgb), 0.15);
     
-    /* 添加简约风格覆盖层 */
+    
     &::before {
       content: '';
       position: absolute;
@@ -2042,10 +1884,10 @@ export default {
         padding: 15px 20px;
         text-align: left;
         border-bottom: 1px solid var(--border-light-color);
-        white-space: nowrap; /* 防止文本换行 */
+        white-space: nowrap; 
         overflow: hidden;
-        text-overflow: ellipsis; /* 超出部分显示省略号 */
-        max-width: 200px; /* 设置最大宽度 */
+        text-overflow: ellipsis; 
+        max-width: 200px; 
       }
       
       th {
@@ -2079,13 +1921,13 @@ export default {
         }
       }
       
-      /* 美化金额列 */
+      
       td:nth-child(2), td:nth-child(3) {
         font-weight: 600;
         font-size: 15px;
       }
       
-      /* 强调佣金列 */
+      
       td:nth-child(3) {
         color: var(--theme-color);
       }
@@ -2127,7 +1969,7 @@ export default {
       }
     }
     
-    /* 响应式调整 */
+    
     @media (max-width: 768px) {
       .records-table {
         th, td {
@@ -2184,7 +2026,7 @@ export default {
   }
 }
 
-/* 按钮样式 */
+
 .btn-primary, .btn-outline, .btn-action {
   display: inline-flex;
   align-items: center;
@@ -2201,8 +2043,8 @@ export default {
   .btn-icon {
     width: 16px;
     height: 16px;
-    display: inline-flex; /* 确保图标正确显示 */
-    vertical-align: middle; /* 垂直居中 */
+    display: inline-flex; 
+    vertical-align: middle; 
   }
   
   &:disabled {
@@ -2278,7 +2120,7 @@ export default {
   }
 }
 
-/* 骨架屏样式 */
+
 .skeleton-loading {
   overflow: hidden;
   position: relative;
@@ -2416,7 +2258,7 @@ export default {
   gap: 12px;
 }
 
-/* 暗色模式下的骨架屏调整 */
+
 .dark-theme .skeleton-header-cell,
 .dark-theme .skeleton-cell,
 .dark-theme .skeleton-icon,
@@ -2426,11 +2268,11 @@ export default {
   background-color: rgba(255, 255, 255, 0.08);
 }
 
-/* 响应式布局 */
+
 @media (max-width: 768px) {
   .account-container {
     padding: 15px;
-    padding-bottom: 80px; /* 为底部导航栏预留空间 */
+    padding-bottom: 80px; 
     
     .stats-grid {
       grid-template-columns: 1fr;
@@ -2463,7 +2305,7 @@ export default {
   }
 }
 
-/* 暗色模式适配 - 使用特定类名选择器 */
+
 .dark-theme .invite-code-tabs,
 .dark .invite-code-tabs {
   background-color: rgba(255, 255, 255, 0.05);
@@ -2481,7 +2323,7 @@ export default {
   }
 }
 
-/* 完善移动端适配 */
+
 @media (max-width: 768px) {
   .invite-code-tabs {
     padding: 10px;
@@ -2523,7 +2365,7 @@ export default {
   }
 }
 
-/* 加载动画 */
+
 .loading-icon {
   display: inline-block;
   width: 16px;
@@ -2552,13 +2394,13 @@ export default {
   to { transform: rotate(360deg); }
 }
 
-/* 在卡片头部按钮中的加载动画样式调整 */
+
 .card-actions .btn-action .loading-icon {
   border: 2px solid rgba(var(--theme-color-rgb), 0.3);
   border-top-color: var(--theme-color);
 }
 
-/* 暗黑模式适配 */
+
 .dark-theme, .dark {
   .invite-link-wrapper .input-with-icon .invite-link {
     background-color: var(--input-bg-color, rgba(255, 255, 255, 0.08));
@@ -2599,7 +2441,7 @@ export default {
     }
   }
   
-  /* 划转卡片暗色模式样式 */
+  
   .transfer-card {
     background-color: var(--card-bg-color);
     border-color: rgba(255, 255, 255, 0.1);
@@ -2645,7 +2487,7 @@ export default {
     }
   }
   
-  /* 余额卡片暗色模式样式 */
+  
   .balance-card {
     &:hover {
       border-color: rgba(var(--theme-color-rgb), 0.3);
@@ -2657,7 +2499,7 @@ export default {
     }
   }
   
-  /* 暗黑模式下的弹窗样式调整 */
+  
   .modal-container {
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
     background-color: var(--card-bg-color);
@@ -2665,7 +2507,7 @@ export default {
   }
 }
 
-/* 自定义弹窗样式 */
+
 .custom-modal {
   position: fixed;
   top: 0;
@@ -3006,7 +2848,7 @@ export default {
   opacity: 0;
 }
 
-/* 提现方法样式 */
+
 .withdraw-methods {
   display: flex;
   flex-wrap: wrap;
@@ -3046,14 +2888,14 @@ export default {
   }
 }
 
-/* 移动端适配优化 */
+
 @media (max-width: 768px) {
   .modal-container {
     width: 95%;
   }
 }
 
-/* 添加新的 CSS 样式 */
+
 .invite-cards-container {
   position: relative;
   display: flex;
@@ -3156,7 +2998,7 @@ export default {
   transition: all 0.2s ease;
   box-shadow: 0 2px 10px rgba(var(--theme-color-rgb), 0.15);
   
-  /* 添加简约风格覆盖层 */
+  
   &::before {
     content: '';
     position: absolute;
@@ -3282,7 +3124,7 @@ export default {
   }
 }
 
-/* 卡片切换动画 */
+
 .invite-card-enter-active,
 .invite-card-leave-active {
   transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
@@ -3309,7 +3151,7 @@ export default {
   }
 }
 
-/* 弹窗动画 */
+
 .modal-enter-active,
 .modal-leave-active {
   transition: all 0.3s ease;
@@ -3351,7 +3193,7 @@ export default {
   }
 }
 
-/* 移动端和暗黑模式适配 */
+
 .invite-cards-indicators {
   display: flex;
   justify-content: center;
@@ -3378,7 +3220,7 @@ export default {
   }
 }
 
-/* 暗黑模式适配 */
+
 .dark-theme, .dark {
   .invite-cards-nav {
     background-color: rgba(255, 255, 255, 0.05);
@@ -3398,7 +3240,7 @@ export default {
   }
 }
 
-/* 移动端适配 */
+
 @media (max-width: 768px) {
   .invite-cards {
     height: 170px;
@@ -3445,7 +3287,7 @@ export default {
   }
 }
 
-/* 佣金余额卡片样式 */
+
 .balance-card {
   transition: all 0.3s ease;
   
@@ -3524,7 +3366,7 @@ export default {
   }
 }
 
-/* 划转卡片样式 */
+
 .transfer-card {
   margin-bottom: 24px;
   overflow: hidden;
@@ -3757,7 +3599,7 @@ export default {
   }
 }
 
-/* 划转卡片动画 */
+
 .slide-fade-enter-active,
 .slide-fade-leave-active {
   transition: opacity 0.25s ease, transform 0.25s ease;
@@ -3771,7 +3613,7 @@ export default {
   transform: translateY(-10px);
 }
 
-/* 自定义下拉选择框样式 */
+
 .custom-select {
   position: relative;
   width: 100%;
@@ -3821,7 +3663,7 @@ export default {
 
   .select-dropdown {
     position: absolute;
-    bottom: calc(100% + 5px); /* 改为向上展开 */
+    bottom: calc(100% + 5px); 
     left: 0;
     width: 100%;
     max-height: 200px;
@@ -3830,11 +3672,11 @@ export default {
     border: 1px solid var(--border-color);
     border-radius: 8px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    z-index: 3001; // 高于 page-size-selector
+    z-index: 3001; 
     padding: 5px 0;
   }
   
-  /* 淡入淡出过渡效果 */
+  
   .fade-enter-active,
   .fade-leave-active {
     transition: opacity 0.2s ease, transform 0.2s ease;
@@ -3843,7 +3685,7 @@ export default {
   .fade-enter-from,
   .fade-leave-to {
     opacity: 0;
-    transform: translateY(5px); /* 改为向上的动画效果 */
+    transform: translateY(5px); 
   }
 
   .select-option {
@@ -3860,7 +3702,7 @@ export default {
     color: var(--theme-color);
   }
 
-/* 提现按钮样式 */
+
 .withdraw-btn {
   background: transparent !important;
   border: 1.5px solid var(--theme-color) !important;
@@ -3877,7 +3719,7 @@ export default {
   }
 }
 
-/* 提现平台标签样式 */
+
 .withdraw-methods {
   display: flex;
   flex-wrap: wrap;
@@ -3908,7 +3750,7 @@ export default {
   }
 }
 
-/* 暗黑模式适配 */
+
 .dark-theme, .dark {
   .method-tag {
     border-color: rgba(255, 255, 255, 0.1);
@@ -3962,7 +3804,7 @@ export default {
   }
 }
 
-/* 分页控件样式 */
+
 .pagination-controls {
   display: flex;
   align-items: center;
@@ -3981,7 +3823,7 @@ export default {
     width: 70px;
     height: 36px;
     position: relative;
-    z-index: 3000; // 高于其它卡片
+    z-index: 3000; 
     display: inline-flex;
   }
   
@@ -4040,7 +3882,7 @@ export default {
   }
 }
 
-/* 移动端适配 */
+
 @media (max-width: 768px) {
   .pagination-controls {
     flex-wrap: nowrap;
@@ -4078,7 +3920,7 @@ export default {
     overflow-x: auto;
     
     .records-table {
-      min-width: 500px; /* Ensure the table has a minimum width on mobile */
+      min-width: 500px; 
       
       th, td {
         white-space: nowrap;
@@ -4089,7 +3931,7 @@ export default {
   }
 }
 
-/* 添加新的 CSS 样式 */
+
 .page-size-selector {
   position: relative;
   display: flex;
@@ -4137,7 +3979,7 @@ export default {
   
   .select-dropdown {
     position: absolute;
-    bottom: calc(100% + 5px); /* 改为向上展开 */
+    bottom: calc(100% + 5px); 
     left: 0;
     width: 100%;
     max-height: 200px;
@@ -4146,11 +3988,11 @@ export default {
     border: 1px solid var(--border-color);
     border-radius: 8px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    z-index: 3001; // 高于 page-size-selector
+    z-index: 3001; 
     padding: 5px 0;
   }
   
-  /* 淡入淡出过渡效果 */
+  
   .fade-enter-active,
   .fade-leave-active {
     transition: opacity 0.2s ease, transform 0.2s ease;
@@ -4159,7 +4001,7 @@ export default {
   .fade-enter-from,
   .fade-leave-to {
     opacity: 0;
-    transform: translateY(5px); /* 改为向上的动画效果 */
+    transform: translateY(5px); 
   }
 
   .select-option {
@@ -4177,3 +4019,5 @@ export default {
   }
 }
 </style> 
+
+

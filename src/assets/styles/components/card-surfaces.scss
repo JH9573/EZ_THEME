@@ -1,0 +1,288 @@
+/**
+ * Shared card surface rules for legacy page-level card classes.
+ * Keep this broad enough to normalize existing pages while AppCard migration continues.
+ */
+
+:where(
+  .dashboard-card,
+  .stats-card,
+  .plan-card,
+  .profile-card,
+  .order-card,
+  .period-card,
+  .formula-card,
+  .chart-card,
+  .alert-card,
+  .balance-card,
+  .deposit-card,
+  .doc-card,
+  .doc-item,
+  .node-item,
+  .ticket-item,
+  .reply-form,
+  .discount-calculation,
+  .order-summary
+) {
+  background-color: var(--card-background) !important;
+  border: 1px solid var(--card-border-color, var(--border-color)) !important;
+  box-shadow: none !important;
+}
+
+:where(
+  .dashboard-card,
+  .stats-card,
+  .plan-card,
+  .profile-card,
+  .order-card,
+  .period-card,
+  .formula-card,
+  .chart-card,
+  .alert-card,
+  .balance-card,
+  .deposit-card,
+  .doc-card,
+  .doc-item,
+  .node-item,
+  .ticket-item,
+  .reply-form,
+  .discount-calculation,
+  .order-summary
+):hover {
+  border-color: var(--card-hover-border-color, var(--theme-color)) !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+:where(
+  .dashboard-card,
+  .stats-card,
+  .plan-card,
+  .profile-card,
+  .order-card,
+  .period-card,
+  .formula-card,
+  .chart-card,
+  .alert-card,
+  .balance-card,
+  .deposit-card,
+  .doc-card,
+  .doc-item,
+  .node-item,
+  .ticket-item,
+  .reply-form,
+  .discount-calculation,
+  .order-summary
+) {
+  transform: none !important;
+}
+
+:where(.glassmorphism) {
+  background-color: var(--card-background) !important;
+  border-color: var(--card-border-color, var(--border-color)) !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+:where(.btn-purchase.glassmorphism) {
+  background-color: var(--theme-color) !important;
+  border-color: var(--theme-color) !important;
+  color: #fff !important;
+}
+
+:where(.btn-purchase.glassmorphism .btn-text, .btn-purchase.glassmorphism .btn-icon) {
+  color: #fff !important;
+  opacity: 1 !important;
+}
+
+:where(.card-badge.glassmorphism, .period-tag) {
+  border: 1px solid var(--card-border-color, var(--border-color)) !important;
+}
+
+:where(.card-badge.stock-plenty) {
+  background-color: rgba(76, 175, 80, 0.12) !important;
+  border-color: rgba(76, 175, 80, 0.28) !important;
+  color: #4caf50 !important;
+}
+
+:where(.card-badge.stock-warning) {
+  background-color: rgba(255, 152, 0, 0.12) !important;
+  border-color: rgba(255, 152, 0, 0.32) !important;
+  color: #ff9800 !important;
+}
+
+:where(.card-badge.stock-danger) {
+  background-color: rgba(244, 67, 54, 0.12) !important;
+  border-color: rgba(244, 67, 54, 0.3) !important;
+  color: #f44336 !important;
+}
+
+:where(.period-tag.active) {
+  background-color: rgba(var(--theme-color-rgb), 0.1) !important;
+  border-color: var(--card-hover-border-color, var(--theme-color)) !important;
+  color: var(--theme-color) !important;
+}
+
+:where(.period-tag.disabled) {
+  background-color: var(--card-hover-background, var(--card-background)) !important;
+  border-color: var(--card-border-color, var(--border-color)) !important;
+  color: var(--secondary-text-color) !important;
+}
+
+:where(
+  .btn-purchase,
+  .new-ticket-btn,
+  .send-reply-btn,
+  .submit-ticket-btn,
+  .confirm-btn,
+  .cancel-btn,
+  .modal-btn,
+  .action-btn
+) {
+  box-shadow: none !important;
+  border: 1px solid var(--card-border-color, var(--border-color)) !important;
+}
+
+:where(
+  .btn-purchase,
+  .new-ticket-btn,
+  .send-reply-btn,
+  .submit-ticket-btn,
+  .confirm-btn,
+  .action-btn.primary
+) {
+  border-color: var(--theme-color) !important;
+}
+
+:where(
+  .btn-purchase:hover,
+  .new-ticket-btn:hover,
+  .send-reply-btn:hover,
+  .submit-ticket-btn:hover,
+  .confirm-btn:hover,
+  .cancel-btn:hover,
+  .modal-btn:hover,
+  .action-btn:hover
+) {
+  box-shadow: none !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+:where(
+  button,
+  .btn,
+  .button,
+  .action-button,
+  .action-btn,
+  .submit-button,
+  .login-button,
+  .register-button,
+  .retry-button,
+  .shop-button,
+  .copy-button,
+  .renew-button,
+  .reset-button,
+  .cancel-button,
+  .view-button,
+  .btn-purchase,
+  .new-ticket-btn,
+  .send-reply-btn,
+  .submit-ticket-btn,
+  .confirm-btn,
+  .cancel-btn,
+  .modal-btn
+):hover {
+  transform: none !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+:where(
+  button,
+  .btn,
+  .button,
+  .action-button,
+  .action-btn,
+  .submit-button,
+  .login-button,
+  .register-button,
+  .retry-button,
+  .shop-button,
+  .copy-button,
+  .renew-button,
+  .reset-button,
+  .cancel-button,
+  .view-button,
+  .btn-purchase,
+  .new-ticket-btn,
+  .send-reply-btn,
+  .submit-ticket-btn,
+  .confirm-btn,
+  .cancel-btn,
+  .modal-btn
+) {
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+:where(
+  .shop-container,
+  .orders-container,
+  .ticket-container,
+  .docs-container,
+  .doc-detail-container,
+  .dashboard-container,
+  .profile-container,
+  .invite-container,
+  .wallet-container,
+  .nodes-container
+)::before,
+:where(
+  .shop-container,
+  .orders-container,
+  .ticket-container,
+  .docs-container,
+  .doc-detail-container,
+  .dashboard-container,
+  .profile-container,
+  .invite-container,
+  .wallet-container,
+  .nodes-container
+)::after {
+  display: none !important;
+  content: none !important;
+}
+
+:where(
+  .modal-card,
+  .modal-content,
+  .modal-container,
+  .notice-modal,
+  .qrcode-modal,
+  .auth-popup-container,
+  .shop-popup-container,
+  .ticket-popup-container,
+  .node-detail-modal,
+  .cancel-modal-content,
+  .dialog-container
+) {
+  background-color: var(--card-background) !important;
+  border: 1px solid var(--card-border-color, var(--border-color)) !important;
+  box-shadow: none !important;
+}
+
+:where(
+  .modal-overlay,
+  .notice-modal-overlay,
+  .qrcode-modal-overlay,
+  .dialog-overlay,
+  .auth-popup-overlay,
+  .shop-popup-overlay,
+  .ticket-popup-overlay,
+  .node-detail-modal-overlay,
+  .cancel-modal-overlay
+) {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}

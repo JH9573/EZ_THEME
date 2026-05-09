@@ -1,6 +1,4 @@
-/**
- * 韩文语言包
- */
+﻿
 
 import { SITE_CONFIG } from '../../../utils/baseConfig';
 
@@ -64,10 +62,8 @@ export default {
     requiresAuth: '로그인이 필요합니다',
     domainNotAuthorized: '도메인이 인증되지 않았습니다',
     contactAdmin: '관리자에게 연락하여 인증을 받으세요',
-    // 验证码相关
     captcha: 'CAPTCHA 인증',
     captchaRequired: 'CAPTCHA 인증을 완료하세요',
-    // 令牌验证登录相关
     verifyTokenSuccess: '토큰 인증 성공',
     verifyTokenFailed: '토큰 인증 실패, 다시 시도하세요'
   },
@@ -107,7 +103,6 @@ export default {
     sendCodeFailed: '인증 코드 전송 실패',
     configLoadFailed: '구성 로드 실패, 페이지를 새로고침하세요'
   },
-  // 浏览器限制页面
   browserRestricted: {
     title: '브라우저 접근 제한',
     subtitle: '현재 브라우저는 지원되지 않습니다',
@@ -133,13 +128,11 @@ export default {
       Unknown: '알 수 없는 브라우저'
     }
   },
-  // Landing page
   landing: {
     mainText: SITE_CONFIG.landingText['ko-KR'] || '글로벌 네트워크의 무한한 가능성을 탐험하세요',
     scrollText: '아래로 스크롤하여 로그인',
     exploreButton: '탐험 시작'
   },
-  // 右键菜单
   contextMenu: {
     refresh: '페이지 새로고침',
     back: '이전 페이지로 돌아가기',
@@ -147,7 +140,6 @@ export default {
     copy: '복사',
     paste: '붙여넣기'
   },
-  // 客服系统
   service: {
     title: '온라인 지원',
     description: '지원 팀과 실시간으로 채팅하세요',

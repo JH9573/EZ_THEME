@@ -1,6 +1,4 @@
-/**
- * 繁體中文語言包
- */
+﻿
 import { SITE_CONFIG } from '../../utils/baseConfig';
 
 export default {
@@ -56,12 +54,10 @@ export default {
     nextNotice: '下一則',
     noticeCount: '第 {current} 則，共 {total} 則',
     copied: '已複製到剪貼簿',
-    // 顶部菜单
     userCenter: '用戶中心',
     myWallet: '我的錢包',
     changePassword: '修改密碼',
     logoutText: '登出',
-    // 新增二维码加载提示
     loadingQRCode: '正在產生二維碼...',
     qrCodeLoadFailed: '二維碼載入失敗',
     qrCodeGenerationFailed: '二維碼產生失敗',
@@ -114,7 +110,6 @@ export default {
     captchaSuccess: '人機驗證成功',
     captchaFailed: '人機驗證失敗',
     
-    // 验证令牌相关
     loginNow: '立即登入',
     resetNow: '重設密碼',
     alreadyHaveAccount: '已有帳戶？',
@@ -132,14 +127,12 @@ export default {
     emailPrefixPlaceholder: '請輸入電子郵件前綴',
     newPasswordPlaceholder: '請輸入新密碼',
     requiresAuth: '需登入',
-    // 验证码相关
     captcha: '人機驗證',
     captchaRequired: '請完成人機驗證',
     captchaInvalid: '人機驗證失敗，請重試',
     captchaExpired: '驗證已過期，請重新驗證',
     captchaError: '驗證錯誤，請重試',
     captchaLoading: '正在載入驗證元件...',
-    // 令牌验证登录相关
     verifyTokenSuccess: '令牌驗證成功',
     verifyTokenFailed: '令牌驗證失敗，請重試'
   },
@@ -220,7 +213,6 @@ export default {
     unlimited: '不限制',
     nextResetTime: '下次重設時間',
     
-    // 订阅导入模态框
     importTitle: '選擇匯入方式',
     copySubscription: '複製訂閱地址',
     copySubscriptionDesc: '複製訂閱連結到剪貼簿',
@@ -240,23 +232,27 @@ export default {
     noClientsAvailable: '此平台暫無可用快速匯入方式',
     clientNotInstalled: '您未安裝對應的客戶端，已複製訂閱連結到剪貼簿'
   },
-  // 平台选择器国际化
   platforms: {
     ios: 'iOS',
     android: 'Android',
     windows: 'Windows',
     macos: 'MacOS'
   },
-  // 导航菜单国际化
   menu: {
     dashboard: '儀表板',
     shop: '商店',
     invite: '邀請',
+    docs: '文件',
+    tickets: '工單',
+    orders: '訂單',
+    nodes: '節點',
+    traffic: '流量',
+    wallet: '錢包',
+    profile: '帳號',
     more: '更多',
     commission: '返利',
     hotSale: '熱銷'
   },
-  // 更多页面
   more: {
     title: '更多功能',
     description: '探索更多功能與服務',
@@ -266,7 +262,6 @@ export default {
     getTechnicalSupport: '取得技術支援',
     manageProfile: '管理個人資料'
   },
-  // 节点页面
   nodes: {
     title: '節點列表',
     loading: '正在載入節點...',
@@ -293,7 +288,6 @@ export default {
     userInfoError: '取得使用者資訊失敗',
     viewSubscribeLink: '檢視訂閱連結'
   },
-  // 订单页面
   orders: {
     title: '訂單列表',
     loading: '正在載入訂單...',
@@ -323,21 +317,17 @@ export default {
       discounted: '已折抵',
       unknown: '未知狀態'
     },
-    // 添加路由标题支持
     confirmOrder: '確認訂單',
     payment: '支付訂單',
   },
-  // 工单页面
   tickets: {
     title: '工單系統',
     description: '與我們的支援團隊聯繫',
     
-    // 搜索和新建
     searchPlaceholder: '搜尋工單...',
     newTicket: '新建工單',
     createNew: '建立工單',
     
-    // 表单字段
     subject: '主題',
     subjectPlaceholder: '請輸入工單主題',
     message: '內容',
@@ -347,35 +337,29 @@ export default {
     levelMedium: '中',
     levelHigh: '高',
     
-    // 状态
     statusOpen: '處理中',
     statusClosed: '已關閉',
     
-    // 提示文本
     noTickets: '暫無工單',
     selectTicket: '請選擇工單檢視詳情',
     noMessages: '暫無訊息記錄',
     loadingMessages: '正在載入訊息...',
     loadingTickets: '載入工單中...',
     
-    // 操作提示
     formIncomplete: '請填寫完整的工單資訊',
     createSuccess: '工單建立成功',
     createError: '工單建立失敗',
     fetchError: '取得工單列表失敗',
     fetchDetailError: '取得工單詳情失敗',
     
-    // 回复相关
     replyPlaceholder: '請輸入回覆內容...',
     send: '傳送',
     replySent: '回覆已傳送',
     replyError: '回覆傳送失敗',
     
-    // 角色标识
     admin: '客服',
     you: '我',
     
-    // 关闭工单
     closeTicket: '關閉工單',
     closeConfirmTitle: '確認關閉工單',
     closeConfirmText: '您確定要關閉此工單？關閉後無法繼續回覆。',
@@ -384,20 +368,25 @@ export default {
     ticketClosed: '此工單已關閉，無法回覆',
     closing: '關閉中...',
     
-    // 时间相关
     createdAt: '建立時間',
     
-    // 小屏幕检测
     smallScreenNotice: '偵測到小螢幕設備',
     switchToMobile: '為獲得更好的體驗，建議切換到行動端視圖',
     switchToMobileView: '切換到行動端視圖',
     
-    // 大屏幕检测
     largeScreenNotice: '偵測到較大螢幕',
     switchToDesktop: '建議使用電腦端工單頁面以獲得更好的體驗',
-    switchToDesktopView: '切換到電腦端視圖'
+    switchToDesktopView: '切換到電腦端視圖',
+    popup: {
+            close_btn: '關閉',
+            wait_close_btn: '{seconds}秒後關閉'
+        },
+    upPictures: '上傳圖片',
+    uploadingImages: '上傳中...',
+    uploadTipText: '拖曳圖片到此處或點擊上傳',
+    uploadDescText: '支援 JPG、PNG、GIF 格式，最大 5 MB',
+    uploadSuccess: '圖片上傳成功'
   },
-  // 用户中心
   profile: {
     title: '用戶中心',
     basicInfo: '基本資訊',
@@ -409,10 +398,13 @@ export default {
     createdAt: '建立時間',
     expiredAt: '到期時間',
     notifications: '通知設定',
+    accountSettings: '帳號設定',
     expireRemind: '到期提醒',
     trafficRemind: '流量提醒',
+    autoRenewal: '自動續費',
     expireRemindDesc: '接收帳戶到期提醒郵件',
     trafficRemindDesc: '接收流量用盡提醒郵件',
+    autoRenewalDesc: '到期時自動續費套餐',
     security: '安全設定',
     changePassword: '修改密碼',
     changePasswordTitle: '修改帳戶密碼',
@@ -453,14 +445,12 @@ export default {
     confirmLogout: '確認登出',
     logoutDesc: '您確定要登出？',
     logout: '登出',
-    // 新增近期登录设备相关翻译
     recentDevices: '近期登入設備',
     noDevices: '暫無登入記錄',
     unknownDevice: '未知設備',
     unknownIP: '未知IP',
     unknownBrowser: '未知瀏覽器',
     sessionError: '取得登入記錄失敗',
-    // Telegram相关翻译
     telegramGroup: 'Telegram 交流群',
     telegramBot: 'Telegram 機器人',
     bindTelegram: '綁定 Telegram 機器人',
@@ -473,7 +463,6 @@ export default {
     telegram: 'Telegram 通訊',
     telegramError: '取得Telegram資訊失敗'
   },
-  // 右键菜单
   contextMenu: {
     refresh: '重新整理頁面',
     back: '返回上一頁',
@@ -481,7 +470,6 @@ export default {
     copy: '複製',
     paste: '貼上'
   },
-  // 客服系统
   service: {
     title: '線上客服',
     description: '與我們的客服團隊即時交流',
@@ -550,11 +538,10 @@ export default {
       devices_desc: '同時支援多台設備使用'
     },
     config_error: '取得商店配置失敗',
-    // 弹窗相关
     popup: {
       close_btn: '我知道了',
       wait_close_btn: '請等待 {seconds} 秒'
-    }
+    },
   },
   order: {
     title: '確認訂單',
@@ -661,7 +648,6 @@ export default {
       activate: '待啟動'
     }
   },
-  // 邀请页面
   invite: {
     title: '我的返佣',
     description: '邀請好友註冊使用，獲取佣金收入',
@@ -789,10 +775,10 @@ export default {
       }
     }
   },
-  // 文档页面相关翻译
   docs: {
     title: '文件中心',
     searchPlaceholder: '搜尋文件...',
+    noAccessPrompt: '您目前沒有有效的套餐，購買套餐後即可檢視該區域的內容',
     loading: '正在載入文件...',
     retry: '重試',
     clearSearch: '清除搜尋',
@@ -812,7 +798,6 @@ export default {
       description: '查找並閱讀有關使用與配置的詳細文件。'
     }
   },
-  // 浏览器限制页面
   browserRestricted: {
     title: '瀏覽器存取受限',
     subtitle: '目前瀏覽器不受支援',
@@ -838,7 +823,6 @@ export default {
       Unknown: '未知瀏覽器'
     }
   },
-  // 流量明细页面
   trafficLog: {
     title: '流量明細',
     description: '檢視您的流量使用情況明細記錄',

@@ -1,6 +1,4 @@
-/**
- * 波斯语言包
- */
+﻿
 import { SITE_CONFIG } from '../../utils/baseConfig';
 
 export default {
@@ -56,12 +54,10 @@ export default {
     nextNotice: 'بعدی',
     noticeCount: 'شماره {current} از {total}',
     copied: 'به کلیپ بورد کپی شد',
-    // 顶部菜单
     userCenter: 'مرکز کاربر',
     myWallet: 'کیف پول من',
     changePassword: 'تغییر پسورد',
     logoutText: 'خروج از حساب',
-    // 新增二维码加载提示
     loadingQRCode: 'در حال تولید QR کد...',
     qrCodeLoadFailed: 'بارگذاری QR کد شکست خورد',
     qrCodeGenerationFailed: 'تولید QR کد شکست خورد',
@@ -114,7 +110,6 @@ export default {
     captchaSuccess: 'تایید انسان موفق',
     captchaFailed: 'تایید انسان شکست خورد',
     
-    // 验证令牌相关
     loginNow: 'اکنون وارد شوید',
     resetNow: 'پسورد را بازنشانی کنید',
     alreadyHaveAccount: 'حساب دارید؟',
@@ -132,14 +127,12 @@ export default {
     emailPrefixPlaceholder: 'پیشوند ایمیل را وارد کنید',
     newPasswordPlaceholder: 'پسورد جدید را وارد کنید',
     requiresAuth: 'نیاز به ورود دارد',
-    // 验证码相关
     captcha: 'تایید انسان',
     captchaRequired: 'تایید انسان را انجام دهید',
     captchaInvalid: 'تایید انسان شکست خورد، دوباره امتحان کنید',
     captchaExpired: 'تایید منقضی شد، دوباره امتحان کنید',
     captchaError: 'خطا در تایید، دوباره امتحان کنید',
     captchaLoading: 'در حال بارگذاری تایید...',
-    // 令牌验证登录相关
     verifyTokenSuccess: 'تایید توکن موفق',
     verifyTokenFailed: 'تایید توکن شکست خورد، لطفا دوباره امتحان کنید'
   },
@@ -220,7 +213,6 @@ export default {
     unlimited: 'نامحدود',
     nextResetTime: 'زمان بازنشانی بعدی',
     
-    // 订阅导入模态框
     importTitle: 'انتخاب روش وارد کردن',
     copySubscription: 'کپی لینک اشتراک',
     copySubscriptionDesc: 'لینک اشتراک را به کلیپ بورد کپی کنید',
@@ -240,23 +232,27 @@ export default {
     noClientsAvailable: 'برای این پلتفرم روش سریع وارد کردن موجود نیست',
     clientNotInstalled: 'کلاینت نصب نشده، لینک اشتراک کپی شد'
   },
-  // 平台选择器国际化
   platforms: {
     ios: 'iOS',
     android: 'Android',
     windows: 'Windows',
     macos: 'MacOS'
   },
-  // 导航菜单国际化
   menu: {
     dashboard: 'داشبورد',
     shop: 'فروشگاه',
     invite: 'دعوت',
+    docs: 'مستندات',
+    tickets: 'تیکت‌ها',
+    orders: 'سفارش‌ها',
+    nodes: 'نودها',
+    traffic: 'ترافیک',
+    wallet: 'کیف پول',
+    profile: 'پروفایل',
     more: 'بیشتر',
     commission: 'کمیسیون',
     hotSale: 'فروش داغ'
   },
-  // 更多页面
   more: {
     title: 'بیشتر ویژگی ها',
     description: 'کاوش ویژگی ها و خدمات بیشتر',
@@ -266,7 +262,6 @@ export default {
     getTechnicalSupport: 'دریافت پشتیبانی فنی',
     manageProfile: 'مدیریت پروفایل'
   },
-  // 节点页面
   nodes: {
     title: 'لیست نودها',
     loading: 'در حال بارگذاری نودها...',
@@ -293,7 +288,6 @@ export default {
     userInfoError: 'دریافت اطلاعات کاربر شکست خورد',
     viewSubscribeLink: 'نمایش لینک اشتراک'
   },
-  // 订单页面
   orders: {
     title: 'لیست سفارش ها',
     loading: 'در حال بارگذاری سفارش ها...',
@@ -323,21 +317,17 @@ export default {
       discounted: 'تخفیف داده شد',
       unknown: 'وضعیت ناشناخته'
     },
-    // 添加路由标题支持
     confirmOrder: 'تایید سفارش',
     payment: 'پرداخت سفارش',
   },
-  // 工单页面
   tickets: {
     title: 'سیستم تیکت',
     description: 'با تیم پشتیبانی تماس بگیرید',
     
-    // 搜索和新建
     searchPlaceholder: 'جستجوی تیکت...',
     newTicket: 'تیکت جدید',
     createNew: 'ایجاد تیکت',
     
-    // 表单字段
     subject: 'موضوع',
     subjectPlaceholder: 'موضوع تیکت را وارد کنید',
     message: 'محتوا',
@@ -347,35 +337,29 @@ export default {
     levelMedium: 'متوسط',
     levelHigh: 'بالا',
     
-    // 状态
     statusOpen: 'در حال پردازش',
     statusClosed: 'بسته شد',
     
-    // 提示文本
     noTickets: 'تیکتی موجود نیست',
     selectTicket: 'تیکت را برای نمایش جزئیات انتخاب کنید',
     noMessages: 'پیامی موجود نیست',
     loadingMessages: 'در حال بارگذاری پیام ها...',
     loadingTickets: 'در حال بارگذاری تیکت ها...',
     
-    // 操作提示
     formIncomplete: 'اطلاعات تیکت را کامل کنید',
     createSuccess: 'تیکت ایجاد شد',
     createError: 'ایجاد تیکت شکست خورد',
     fetchError: 'دریافت لیست تیکت شکست خورد',
     fetchDetailError: 'دریافت جزئیات تیکت شکست خورد',
     
-    // 回复相关
     replyPlaceholder: 'محتوای پاسخ را وارد کنید...',
     send: 'ارسال',
     replySent: 'پاسخ ارسال شد',
     replyError: 'ارسال پاسخ شکست خورد',
     
-    // 角色标识
     admin: 'پشتیبانی',
     you: 'من',
     
-    // 关闭工单
     closeTicket: 'بستن تیکت',
     closeConfirmTitle: 'تایید بستن تیکت',
     closeConfirmText: 'آیا مطمئن هستید که می خواهید تیکت را ببندید؟ پس از بسته شدن نمی توانید پاسخ دهید',
@@ -384,25 +368,26 @@ export default {
     ticketClosed: 'این تیکت بسته شد، نمی توانید پاسخ دهید',
     closing: 'در حال بسته شدن...',
     
-    // 时间相关
     createdAt: 'زمان ایجاد',
     
-    // 小屏幕检测
     smallScreenNotice: 'دستگاه با صفحه کوچک تشخیص داده شد',
     switchToMobile: 'برای تجربه بهتر به حالت موبایل سوئیچ کنید',
     switchToMobileView: 'سوئیچ به حالت موبایل',
     
-    // 大屏幕检测
     largeScreenNotice: 'دستگاه با صفحه بزرگ تشخیص داده شد',
     switchToDesktop: 'برای تجربه بهتر به حالت دسکتاپ سوئیچ کنید',
     switchToDesktopView: 'سوئیچ به حالت دسکتاپ',
-    // 弹窗
     popup: {
       close_btn: 'بستن',
       wait_close_btn: 'بستن در {seconds} ثانیه'
-    },
+    }
+    ,
+    upPictures: 'آپلود تصاویر',
+    uploadingImages: 'در حال آپلود...',
+    uploadTipText: 'تصاویر را اینجا بکشید و رها کنید یا برای آپلود کلیک کنید',
+    uploadDescText: 'پشتیبانی از فرمت‌های JPG، PNG، GIF تا 5 مگابایت',
+    uploadSuccess: 'تصویر با موفقیت آپلود شد',
   },
-  // 用户中心
   profile: {
     title: 'مرکز کاربر',
     basicInfo: 'اطلاعات پایه',
@@ -414,10 +399,13 @@ export default {
     createdAt: 'زمان ایجاد',
     expiredAt: 'زمان انقضا',
     notifications: 'تنظیمات اطلاع رسانی',
+    accountSettings: 'تنظیمات حساب',
     expireRemind: 'یادآوری انقضا',
     trafficRemind: 'یادآوری ترافیک',
+    autoRenewal: 'تمدید خودکار',
     expireRemindDesc: 'دریافت ایمیل یادآوری انقضا حساب',
     trafficRemindDesc: 'دریافت ایمیل یادآوری ترافیک تمام شده',
+    autoRenewalDesc: 'تمدید خودکار بسته هنگام انقضا',
     security: 'تنظیمات امنیت',
     changePassword: 'تغییر پسورد',
     changePasswordTitle: 'تغییر پسورد حساب',
@@ -458,14 +446,12 @@ export default {
     confirmLogout: 'تایید خروج',
     logoutDesc: 'آیا مطمئن هستید که می خواهید خارج شوید؟',
     logout: 'خروج',
-    // 新增近期登录设备相关翻译
     recentDevices: 'دستگاه های اخیرا وارد شده',
     noDevices: 'رکوردی از ورود وجود ندارد',
     unknownDevice: 'دستگاه ناشناخته',
     unknownIP: 'IP ناشناخته',
     unknownBrowser: 'مرورگر ناشناخته',
     sessionError: 'دریافت رکورد ورود شکست خورد',
-    // Telegram相关翻译
     telegramGroup: 'گروه Telegram',
     telegramBot: 'ربات Telegram',
     bindTelegram: 'اتصال به ربات Telegram',
@@ -478,7 +464,6 @@ export default {
     telegram: 'ارتباط Telegram',
     telegramError: 'دریافت اطلاعات Telegram شکست خورد'
   },
-  // 右键菜单
   contextMenu: {
     refresh: 'تازه سازی صفحه',
     back: 'بازگشت به صفحه قبلی',
@@ -486,7 +471,6 @@ export default {
     copy: 'کپی',
     paste: 'چسباندن'
   },
-  // 客服系统
   service: {
     title: 'پشتیبانی آنلاین',
     description: 'با تیم پشتیبانی به طور واقعی چت کنید',
@@ -555,7 +539,6 @@ export default {
       devices_desc: 'استفاده همزمان چند دستگاه'
     },
     config_error: 'دریافت تنظیمات فروشگاه شکست خورد',
-    // 弹窗相关
     popup: {
       close_btn: 'درک کردم',
       wait_close_btn: 'لطفا {seconds} ثانیه صبر کنید'
@@ -666,7 +649,6 @@ export default {
       activate: 'در حال فعال سازی'
     }
   },
-  // 邀请页面
   invite: {
     title: 'کمیسیون من',
     description: 'دوستان را دعوت کنید و کمیسیون کسب کنید',
@@ -794,10 +776,10 @@ export default {
       }
     }
   },
-  // 文档页面相关翻译
   docs: {
     title: 'مرکز مستندات',
     searchPlaceholder: 'جستجوی مستندات...',
+    noAccessPrompt: 'شما در حال حاضر طرح فعال ندارید. برای مشاهده محتوای این بخش، یک طرح خریداری کنید',
     loading: 'در حال بارگذاری مستندات...',
     retry: 'دوباره امتحان کنید',
     clearSearch: 'پاک کردن جستجو',
@@ -817,7 +799,6 @@ export default {
       description: 'مستندات مربوط به استفاده و تنظیمات را پیدا کنید و بخوانید'
     }
   },
-  // 浏览器限制页面
   browserRestricted: {
     title: 'دسترسی مرورگر محدود است',
     subtitle: 'مرورگر فعلی پشتیبانی نمی شود',
@@ -843,7 +824,6 @@ export default {
       Unknown: 'ناشناخته'
     }
   },
-  // 流量明细页面
   trafficLog: {
     title: 'جزئیات ترافیک',
     description: 'رکوردهای استفاده از ترافیک را ببینید',

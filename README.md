@@ -26,14 +26,11 @@ TAG: V2B 主题 \ V2B 开源主题 \ XB 主题 \ 主题 \ 面板美化包 \ V2Bo
 -  完善的登录认证系统
 -  模块化的代码结构，易于维护
 
-## 技术栈
+## 社区与联系
 
-- Vue 3 - 渐进式JavaScript框架
-- Vue Router - 官方路由管理器
-- Vuex - 状态管理模式
-- Axios - 基于Promise的HTTP客户端
-- Sass - CSS预处理器
-- Vue I18n - 国际化解决方案
+👥 **公开群组**： [https://t.me/next_design_group](https://t.me/next_design_group)  
+💬 **联系我**： [https://t.me/Cyou6](https://t.me/Cyou6)
+
 
 ## 项目结构
 
@@ -66,7 +63,7 @@ npm install
 ### 开发环境运行
 
 ```bash
-npm run serve
+npm run dev
 ```
 
 ### 生产环境构建

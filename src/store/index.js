@@ -1,123 +1,91 @@
-/**
- * Vuex存储配置
- */
-import { createStore } from 'vuex';
-import { THEME_CONFIG } from '@/utils/baseConfig';
-// 导入API中的forceLogout函数，用于确保完整地清除登录状态
-import { forceLogout } from '@/api/auth';
+import { pinia, useAuthStore, useThemeStore, useAppStore } from '@/stores';
 
-export default createStore({
-  state: {
-    // 用户信息
-    user: null,
-    token: localStorage.getItem('token') || '',
-    
-    // 主题设置
-    theme: localStorage.getItem('theme') || THEME_CONFIG.defaultTheme,
-    
-    // 应用设置
-    loading: false,
-    error: null
+const getStores = () => ({
+  auth: useAuthStore(pinia),
+  theme: useThemeStore(pinia),
+  app: useAppStore(pinia)
+});
+
+const clearBrowserAuthState = () => {
+  window.isUserLoggedIn = false;
+  window.authDataInStorage = null;
+  window.authCookieFailure = false;
+
+  [
+    'token',
+    'auth_data',
+    'cookie_auth_data',
+    'userInfo',
+    'is_admin',
+    'vuex',
+    'user',
+    'auth'
+  ].forEach(key => {
+    localStorage.removeItem(key);
+    sessionStorage.removeItem(key);
+  });
+
+  ['auth_data', 'XSRF-TOKEN', 'laravel_session', 'token'].forEach(name => {
+    ['/', '/dashboard', '/user', '/admin'].forEach(path => {
+      document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=${path};`;
+    });
+  });
+};
+
+const legacyStore = {
+  get state() {
+    const { auth, theme, app } = getStores();
+    return {
+      user: auth.user,
+      token: auth.token,
+      theme: theme.theme,
+      loading: app.loading,
+      error: app.error
+    };
   },
-  
-  getters: {
-    // 是否已登录
-    isLoggedIn: state => !!state.token,
-    
-    // 获取用户信息
-    userInfo: state => state.user,
-    
-    // 获取当前主题
-    currentTheme: state => state.theme,
-    
-    // 是否为暗黑模式
-    isDarkTheme: state => state.theme === 'dark'
+  get getters() {
+    const { auth, theme } = getStores();
+    return {
+      isLoggedIn: auth.isLoggedIn,
+      userInfo: auth.userInfo,
+      currentTheme: theme.currentTheme,
+      isDarkTheme: theme.isDarkTheme
+    };
   },
-  
-  mutations: {
-    // 设置用户信息
-    SET_USER(state, user) {
-      state.user = user;
-    },
-    
-    // 设置令牌
-    SET_TOKEN(state, token) {
-      state.token = token;
-      localStorage.setItem('token', token);
-    },
-    
-    // 清除用户信息
-    CLEAR_USER(state) {
-      state.user = null;
-      state.token = '';
-      localStorage.removeItem('token');
-      localStorage.removeItem('userInfo');
-    },
-    
-    // 设置主题
-    SET_THEME(state, theme) {
-      state.theme = theme;
-      localStorage.setItem('theme', theme);
-    },
-    
-    // 设置加载状态
-    SET_LOADING(state, status) {
-      state.loading = status;
-    },
-    
-    // 设置错误信息
-    SET_ERROR(state, error) {
-      state.error = error;
+  commit(type, payload) {
+    const { auth, theme, app } = getStores();
+    const mutations = {
+      SET_USER: () => auth.setUser(payload),
+      SET_TOKEN: () => auth.setToken(payload),
+      CLEAR_USER: () => auth.clearUser(),
+      SET_THEME: () => theme.setTheme(payload),
+      SET_LOADING: () => app.setLoading(payload),
+      SET_ERROR: () => app.setError(payload)
+    };
+
+    if (mutations[type]) {
+      mutations[type]();
     }
   },
-  
-  actions: {
-    // 登录
-    login({ commit }, token) {
-      commit('SET_TOKEN', token);
-    },
-    
-    // 登出
-    logout({ commit }) {
-      commit('CLEAR_USER');
-      // 调用forceLogout确保完全清除登录状态
-      try {
-        // 确保forceLogout方法可用
-        if (typeof forceLogout === 'function') {
-          forceLogout();
-        }
-      } catch (error) {
-        console.error('在Store中调用forceLogout失败:', error);
-      }
-    },
-    
-    // 设置用户信息
-    setUser({ commit }, user) {
-      commit('SET_USER', user);
-      localStorage.setItem('userInfo', JSON.stringify(user));
-    },
-    
-    // 切换主题
-    toggleTheme({ commit, state }) {
-      const newTheme = state.theme === 'light' ? 'dark' : 'light';
-      commit('SET_THEME', newTheme);
-    },
-    
-    // 初始化用户信息
-    initUserInfo({ commit }) {
-      const userInfo = localStorage.getItem('userInfo');
-      if (userInfo) {
-        try {
-          commit('SET_USER', JSON.parse(userInfo));
-        } catch (err) {
-          console.error('解析用户信息失败:', err);
-          localStorage.removeItem('userInfo');
-        }
-      }
+  dispatch(type, payload) {
+    const { auth, theme } = getStores();
+    const actions = {
+      login: () => auth.setToken(payload),
+      logout: async () => {
+        auth.clearUser();
+        clearBrowserAuthState();
+      },
+      setUser: () => auth.setUser(payload),
+      toggleTheme: () => theme.toggleTheme(),
+      initUserInfo: () => auth.initUserInfo()
+    };
+
+    if (actions[type]) {
+      return actions[type]();
     }
-  },
-  
-  modules: {
-    // 可以在这里添加模块
+
+    return undefined;
   }
-}); 
+};
+
+export default legacyStore;

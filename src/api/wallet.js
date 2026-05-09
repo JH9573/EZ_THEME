@@ -1,36 +1,24 @@
-/**
- * 用户钱包和充值相关API
- * @author EZ THEME
- */
-import request from './request';
+﻿
+import request from './request';
+
+
+export function getUserConfig() {
+  return request({
+    url: '/user/comm/config',
+    method: 'get'
+  });
+}
+
+
+export function createOrderDeposit(amount) {
+  return request({
+    url: '/user/order/save',
+    method: 'post',
+    data: {
+      period: 'deposit',
+      deposit_amount: amount,
+      plan_id: 0 
+    }
+  });
+}
 
-/**
- * getUserConfig - 获取用户通用配置
- * @Board @url GET /user/comm/config
- * @returns {Promise<object>} - 通用配置
- * 返回数据：
- * - 货币符号
- */
-export function getUserConfig() {
-  return request({
-    url: '/user/comm/config',
-    method: 'get'
-  });
-}
-
-/**
- * 创建充值订单（新接口）
- * @param {number} amount - 充值金额(单位:分)
- * @returns {Promise<object>} - 充值订单信息，返回订单号
- */
-export function createOrderDeposit(amount) {
-  return request({
-    url: '/user/order/save',
-    method: 'post',
-    data: {
-      period: 'deposit',
-      deposit_amount: amount,
-      plan_id: 0 // 充值固定为0
-    }
-  });
-}

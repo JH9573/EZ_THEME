@@ -1,6 +1,4 @@
-/**
- * 波斯语言包 - 登录相关
- */
+﻿
 
 import { SITE_CONFIG } from '../../../utils/baseConfig';
 
@@ -64,10 +62,8 @@ export default {
     requiresAuth: 'نیاز به ورود دارد',
     domainNotAuthorized: 'دامنه مجاز نیست',
     contactAdmin: 'با مدیر تماس بگیرید',
-    // 验证码相关
     captcha: 'تایید انسان',
     captchaRequired: 'تایید انسان را انجام دهید',
-    // 令牌验证登录相关
     verifyTokenSuccess: 'تایید توکن موفق',
     verifyTokenFailed: 'تایید توکن شکست خورد، لطفا دوباره امتحان کنید'
   },
@@ -107,7 +103,6 @@ export default {
     sendCodeFailed: 'ارسال کد شکست خورد',
     configLoadFailed: 'بارگذاری تنظیمات شکست خورد، صفحه را تازه کنید'
   },
-  // 浏览器限制页面
   browserRestricted: {
     title: 'دسترسی مرورگر محدود است',
     subtitle: 'مرورگر فعلی پشتیبانی نمی شود',
@@ -133,13 +128,11 @@ export default {
       Unknown: 'ناشناخته'
     }
   },
-  // Landing page
   landing: {
     mainText: SITE_CONFIG.landingText['fa-IR'] || 'امکانات نامحدود شبکه جهانی را کاوش کنید',
     scrollText: 'برای ورود به پایین بکشید',
     exploreButton: 'شروع کاوش'
   },
-  // 右键菜单
   contextMenu: {
     refresh: 'تازه سازی صفحه',
     back: 'بازگشت به صفحه قبلی',
@@ -147,7 +140,6 @@ export default {
     copy: 'کپی',
     paste: 'چسباندن'
   },
-  // 客服系统
   service: {
     title: 'پشتیبانی آنلاین',
     description: 'با تیم پشتیبانی به طور واقعی چت کنید',

@@ -1,6 +1,4 @@
-/**
- * 英文语言包
- */
+﻿
 
 import { SITE_CONFIG } from '../../../utils/baseConfig';
 
@@ -64,10 +62,8 @@ export default {
     requiresAuth: 'Sign-in required',
     domainNotAuthorized: 'Domain not authorized',
     contactAdmin: 'Please contact the administrator for authorization',
-    // 验证码相关
     captcha: 'CAPTCHA Verification',
     captchaRequired: 'Please complete the CAPTCHA verification',
-    // 令牌验证登录相关
     verifyTokenSuccess: 'Token verification successful',
     verifyTokenFailed: 'Token verification failed, please try again'
   },
@@ -107,7 +103,6 @@ export default {
     sendCodeFailed: 'Failed to send verification code',
     configLoadFailed: 'Failed to load configuration, please refresh the page'
   },
-  // 浏览器限制页面
   browserRestricted: {
     title: 'Browser Access Restricted',
     subtitle: 'Current browser is not supported',
@@ -133,13 +128,11 @@ export default {
       Unknown: 'Unknown Browser'
     }
   },
-  // Landing page
   landing: {
-    mainText: SITE_CONFIG.landingText['en'] || 'Explore the infinite possibilities of the global network',
+    mainText: SITE_CONFIG.landingText['en-US'] || 'Explore the infinite possibilities of the global network',
     scrollText: 'Scroll down to sign in',
     exploreButton: 'Start Exploring'
   },
-  // 右键菜单
   contextMenu: {
     refresh: 'Refresh Page',
     back: 'Go Back',
@@ -147,7 +140,6 @@ export default {
     copy: 'Copy',
     paste: 'Paste'
   },
-  // 客服系统
   service: {
     title: 'Online Support',
     description: 'Chat with our support team in real time',

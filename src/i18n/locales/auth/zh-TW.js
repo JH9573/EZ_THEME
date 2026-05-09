@@ -1,6 +1,4 @@
-/**
- * 繁體中文語言包
- */
+﻿
 
 import { SITE_CONFIG } from '../../../utils/baseConfig';
 
@@ -64,10 +62,8 @@ export default {
     requiresAuth: '需要登錄',
     domainNotAuthorized: '域名未授權',
     contactAdmin: '請聯繫管理員獲取授權',
-    // 驗證碼相關
     captcha: '人機驗證',
     captchaRequired: '請完成人機驗證',
-    // 令牌验证登录相关
     verifyTokenSuccess: '令牌驗證成功',
     verifyTokenFailed: '令牌驗證失敗，請重試'
   },
@@ -107,7 +103,6 @@ export default {
     sendCodeFailed: '驗證碼發送失敗',
     configLoadFailed: '配置加載失敗，請刷新頁面重試'
   },
-  // 瀏覽器限制頁面
   browserRestricted: {
     title: '瀏覽器訪問受限',
     subtitle: '當前瀏覽器不受支持',
@@ -133,13 +128,11 @@ export default {
       Unknown: '未知瀏覽器'
     }
   },
-  // Landing page
   landing: {
     mainText: SITE_CONFIG.landingText['zh-TW'] || '探索全球網絡無限可能',
     scrollText: '向下滑動以登錄',
     exploreButton: '開始探索'
   },
-  // 右鍵菜單
   contextMenu: {
     refresh: '刷新頁面',
     back: '返回上一頁',
@@ -147,7 +140,6 @@ export default {
     copy: '複製',
     paste: '粘貼'
   },
-  // 客服系統
   service: {
     title: '線上客服',
     description: '與我們的客服團隊即時交流',

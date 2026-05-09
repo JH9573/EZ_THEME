@@ -1,6 +1,4 @@
-/**
- * 中文语言包 - 登录相关
- */
+﻿
 
 import { SITE_CONFIG } from '../../../utils/baseConfig';
 
@@ -64,10 +62,8 @@ export default {
     requiresAuth: '需要登录',
     domainNotAuthorized: '域名未授权',
     contactAdmin: '请联系管理员获取授权',
-    // 验证码相关
     captcha: '人机验证',
     captchaRequired: '请完成人机验证',
-    // 令牌验证登录相关
     verifyTokenSuccess: '令牌验证成功',
     verifyTokenFailed: '令牌验证失败，请重试'
   },
@@ -107,7 +103,6 @@ export default {
     sendCodeFailed: '验证码发送失败',
     configLoadFailed: '配置加载失败，请刷新页面重试'
   },
-  // 浏览器限制页面
   browserRestricted: {
     title: '浏览器访问受限',
     subtitle: '当前浏览器不受支持',
@@ -133,13 +128,11 @@ export default {
       Unknown: '未知浏览器'
     }
   },
-  // Landing page
   landing: {
     mainText: SITE_CONFIG.landingText['zh-CN'] || '探索全球网络无限可能',
     scrollText: '向下滑动以登录',
     exploreButton: '开始探索'
   },
-  // 右键菜单
   contextMenu: {
     refresh: '刷新页面',
     back: '返回上一页',
@@ -147,7 +140,6 @@ export default {
     copy: '复制',
     paste: '粘贴'
   },
-  // 客服系统
   service: {
     title: '在线客服',
     description: '与我们的客服团队实时交流',

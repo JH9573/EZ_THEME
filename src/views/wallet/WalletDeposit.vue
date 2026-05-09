@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="deposit-container">
     <div class="deposit-inner">
       <!-- 欢迎卡片 -->
@@ -22,11 +22,32 @@
             <div class="balance-value">{{ currencySymbol }}{{ formatAmount(userBalance) }}</div>
             <div class="balance-label">{{ $t('wallet.balance.description') }}</div>
           </div>
-          
+
           <!-- 余额信息 - 骨架屏 -->
           <div class="balance-skeleton" v-else>
             <div class="skeleton-balance-value"></div>
             <div class="skeleton-balance-label"></div>
+          </div>
+
+          <!-- 自动续费设置 -->
+          <div class="balance-setting">
+            <div class="setting-item">
+              <div class="setting-info">
+                <span class="setting-label">{{ $t('profile.autoRenewal') }}</span>
+                <span class="setting-description">{{ $t('profile.autoRenewalDesc') }}</span>
+              </div>
+              <div class="setting-toggle">
+                <label class="switch" :class="{ 'disabled': updatingAutoRenewal }">
+                  <input 
+                    type="checkbox" 
+                    v-model="autoRenewal" 
+                    @change="updateAutoRenewal" 
+                    :disabled="updatingAutoRenewal" 
+                  />
+                  <span class="slider round" :class="{ 'loading': updatingAutoRenewal }"></span>
+                </label>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -104,7 +125,7 @@
             <button 
               v-else
               class="btn-order"
-              :disabled="loading.submitting || !isValidAmount" 
+              :disabled="loading.submitting || !isValidAmount || parseFloat(customAmount) < minimumDepositAmount"
               @click="handleDeposit"
             >
               <IconShoppingCart v-if="!loading.submitting" :size="18" />
@@ -123,47 +144,32 @@ import { ref, computed, onMounted, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useToast } from '@/composables/useToast';
 import { IconAlertCircle, IconShoppingCart } from '@tabler/icons-vue';
-import { getUserInfo } from '@/api/user';
+import { getUserInfo, updateRemindSettings as apiUpdateRemind } from '@/api/user';
 import { createOrderDeposit, getUserConfig } from '@/api/wallet';
 import { isXiaoV2board } from '@/utils/baseConfig';
 import { useRouter } from 'vue-router';
 import { WALLET_CONFIG } from '@/utils/baseConfig';
-
 const { t } = useI18n();
 const { showToast } = useToast();
 const router = useRouter();
-
-// 检查是否为Xiao-V2board面板
 const isXiaoPanel = isXiaoV2board();
-
-// 如果不是Xiao-V2board面板，跳转到仪表盘
 if (!isXiaoPanel) {
   router.push('/dashboard');
 }
-
-// 用户余额
 const userBalance = ref(0);
-// 货币符号
-const currencySymbol = ref('$'); // 默认货币符号，将在获取用户配置时更新
-// 预设金额选项 - 从配置中获取
+const currencySymbol = ref('$');
 const presetAmounts = ref(WALLET_CONFIG.presetAmounts || [6, 30, 68, 128, 256, 328, 648, 1280]);
-// 选择的金额
 const selectedAmount = ref(WALLET_CONFIG.defaultSelectedAmount || null);
-// 自定义金额
 const customAmount = ref('');
-// 金额错误信息
 const amountError = ref('');
-// 最小充值金额
 const minimumDepositAmount = WALLET_CONFIG.minimumDepositAmount || 1;
-
-// 加载状态
+const autoRenewal = ref(false);
+const updatingAutoRenewal = ref(false);
 const loading = reactive({
   balance: true,
   submitting: false,
   config: true
 });
-
-// 获取用户通用配置（货币符号等）
 const fetchUserConfig = async () => {
   try {
     const response = await getUserConfig();
@@ -176,24 +182,17 @@ const fetchUserConfig = async () => {
     loading.config = false;
   }
 };
-
-// 格式化金额，将分转换为元
 const formatAmount = (amount) => {
   return (parseFloat(amount) / 100).toFixed(2);
 };
-
-// 选择预设金额
 const selectAmount = (amount) => {
   selectedAmount.value = amount;
   customAmount.value = '';
   amountError.value = '';
 };
-
-// 处理自定义金额输入
 const onCustomAmountInput = () => {
   selectedAmount.value = null;
   
-  // 验证金额是否有效
   if (customAmount.value === '') {
     amountError.value = '';
     return;
@@ -201,15 +200,13 @@ const onCustomAmountInput = () => {
   
   const amount = parseFloat(customAmount.value);
   if (isNaN(amount) || amount <= 0) {
-    amountError.value = t('messages.configLoadFailed') || t('wallet.deposit.amountError.invalid');
+    amountError.value = t('wallet.deposit.amountError.invalid');
   } else if (amount < minimumDepositAmount) {
-    amountError.value = t('messages.configLoadFailed') || t('wallet.deposit.amountError.minimum').replace('1', minimumDepositAmount);
+    amountError.value = t('wallet.deposit.amountError.minimum').replace('1', minimumDepositAmount);
   } else {
     amountError.value = '';
   }
 };
-
-// 计算当前选择的有效金额
 const currentAmount = computed(() => {
   if (selectedAmount.value) {
     return selectedAmount.value;
@@ -221,19 +218,16 @@ const currentAmount = computed(() => {
   
   return null;
 });
-
-// 是否有效金额
 const isValidAmount = computed(() => {
   return currentAmount.value !== null;
 });
-
-// 获取用户余额信息
 const fetchUserBalance = async () => {
   loading.balance = true;
   try {
     const response = await getUserInfo();
     if (response && response.data) {
       userBalance.value = response.data.balance || 0;
+      autoRenewal.value = !!response.data.auto_renewal;
     }
   } catch (error) {
     console.error('获取用户余额失败:', error);
@@ -243,10 +237,35 @@ const fetchUserBalance = async () => {
   }
 };
 
-// 处理充值请求
+/**
+ * 更新自动续费设置
+ */
+const updateAutoRenewal = async () => {
+  updatingAutoRenewal.value = true;
+  
+  try {
+    const data = {
+      auto_renewal: autoRenewal.value ? 1 : 0
+    };
+    
+    const response = await apiUpdateRemind(data);
+    
+    if (response && response.data) {
+      showToast(t('profile.updateSuccess'), 'success');
+    }
+  } catch (error) {
+    console.error('更新自动续费设置失败:', error);
+    
+    // 回滚状态
+    autoRenewal.value = !autoRenewal.value;
+    
+    showToast(error.response?.message || error.message || t('profile.updateError'), 'error');
+  } finally {
+    updatingAutoRenewal.value = false;
+  }
+};
 const handleDeposit = async () => {
   if (!isValidAmount.value) {
-    // 当金额无效时，使用验证错误的消息
     showToast(t('validation.required').replace('{field}', t('wallet.deposit.title')) || t('wallet.deposit.amountError.required'), 'warning');
     return;
   }
@@ -254,20 +273,14 @@ const handleDeposit = async () => {
   try {
     loading.submitting = true;
     
-    // 将金额转换为分
     const amountInCents = Math.round(currentAmount.value * 100);
     
-    // 使用API函数创建订单
     const response = await createOrderDeposit(amountInCents);
     
     if (response && response.data) {
-      // 获取订单号
       const orderId = response.data;
-    //   console.log('充值订单创建成功:', orderId);
-      // 成功时使用订单创建成功的消息
       showToast(t('wallet.deposit.success'), 'success');
       
-      // 跳转到支付页面
       router.push({
         path: '/payment',
         query: { 
@@ -278,20 +291,16 @@ const handleDeposit = async () => {
     }
   } catch (error) {
     console.error('创建充值订单失败:', error);
-    // 优先使用API返回的错误消息
     showToast(error.response?.message || error.message || t('errors.serverError') || t('wallet.deposit.failed'), 'error');
   } finally {
     loading.submitting = false;
   }
 };
-
-// 监听组件挂载
 onMounted(() => {
   fetchUserBalance();
-  fetchUserConfig(); // 获取用户配置（包括货币符号）
+  fetchUserConfig();
 });
 </script>
-
 <style lang="scss" scoped>
 .deposit-container {
   padding: 20px;
@@ -355,9 +364,11 @@ onMounted(() => {
   .balance-card {
     .card-body {
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       padding: 25px;
+      gap: 20px;
     }
     
     .balance-display {
@@ -377,7 +388,7 @@ onMounted(() => {
       }
     }
     
-    /* 余额骨架屏 */
+    
     .balance-skeleton {
       width: 100%;
       text-align: center;
@@ -421,6 +432,111 @@ onMounted(() => {
         }
       }
     }
+
+    .balance-setting {
+      width: 100%;
+      padding-top: 15px;
+      border-top: 1px solid var(--border-color);
+      
+      .setting-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0;
+        
+        .setting-info {
+          flex: 1;
+          margin-right: 16px;
+          
+          .setting-label {
+            display: block;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-color);
+            margin-bottom: 4px;
+          }
+          
+          .setting-description {
+            font-size: 13px;
+            color: var(--secondary-text-color);
+          }
+        }
+        
+        .setting-toggle {
+          .switch {
+            position: relative;
+            display: inline-block;
+            width: 46px;
+            height: 24px;
+            
+            &.disabled {
+              opacity: 0.7;
+              cursor: not-allowed;
+            }
+            
+            input {
+              opacity: 0;
+              width: 0;
+              height: 0;
+              
+              &:checked + .slider {
+                background-color: var(--theme-color);
+              }
+              
+              &:checked + .slider:before {
+                transform: translateX(22px);
+              }
+              
+              &:disabled + .slider {
+                cursor: not-allowed;
+              }
+            }
+            
+            .slider {
+              position: absolute;
+              cursor: pointer;
+              top: 0;
+              left: 0;
+              right: 0;
+              bottom: 0;
+              background-color: #ccc;
+              transition: .4s;
+              border-radius: 34px;
+              
+              &.loading {
+                overflow: hidden;
+                
+                &:before {
+                  animation: pulse 1.5s infinite;
+                }
+                
+                &:after {
+                  content: "";
+                  position: absolute;
+                  width: 100%;
+                  height: 100%;
+                  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+                  animation: sweep 1.5s infinite;
+                }
+              }
+              
+              &:before {
+                position: absolute;
+                content: "";
+                height: 18px;
+                width: 18px;
+                left: 3px;
+                bottom: 3px;
+                background-color: white;
+                transition: .4s;
+                z-index: 1;
+                border-radius: 50%;
+              }
+            }
+          }
+        }
+      }
+    }
   }
   
   .deposit-card {
@@ -447,7 +563,7 @@ onMounted(() => {
       }
     }
     
-    /* 周期卡片样式的金额选择 */
+    
     .amount-selection {
       margin-bottom: 10px;
       width: 100%;
@@ -581,7 +697,7 @@ onMounted(() => {
       }
     }
     
-    /* 充值按钮样式 */
+    
     .deposit-actions {
       margin-top: 25px;
       display: flex;
@@ -634,8 +750,6 @@ onMounted(() => {
     }
   }
 }
-
-/* 骨架屏动画 */
 @keyframes shimmer {
   0% {
     transform: translateX(-100%);
@@ -644,13 +758,31 @@ onMounted(() => {
     transform: translateX(300%);
   }
 }
-
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
 
-/* 深色模式调整 */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 5px rgba(255, 255, 255, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+  }
+}
+
+@keyframes sweep {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
 .dark-theme {
   .skeleton-balance-value,
   .skeleton-balance-label,
@@ -666,8 +798,6 @@ onMounted(() => {
     }
   }
 }
-
-/* 响应式样式 */
 @media (max-width: 768px) {
   .deposit-container {
     padding: 15px;
@@ -690,8 +820,6 @@ onMounted(() => {
     }
   }
 }
-
-/* 骨架屏样式 */
 .skeleton-card {
   cursor: default;
   border: 2px solid var(--border-color);
@@ -730,8 +858,6 @@ onMounted(() => {
     box-shadow: none;
   }
 }
-
-/* 自定义金额输入骨架屏 */
 .skeleton-input {
   height: 50px;
   position: relative;
@@ -764,8 +890,6 @@ onMounted(() => {
     }
   }
 }
-
-/* 按钮骨架屏 */
 .btn-order-skeleton {
   height: 50px;
   min-width: 200px;

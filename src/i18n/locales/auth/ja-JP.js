@@ -1,6 +1,4 @@
-/**
- * 日本語言語パック
- */
+﻿
 
 import { SITE_CONFIG } from '../../../utils/baseConfig';
 
@@ -64,10 +62,8 @@ export default {
     requiresAuth: 'ログインが必要です',
     domainNotAuthorized: 'ドメインが認証されていません',
     contactAdmin: '管理者にお問い合わせして認証を取得してください',
-    // 验证码相关
     captcha: 'CAPTCHA認証',
     captchaRequired: 'CAPTCHA認証を完了してください',
-    // 令牌验证登录相关
     verifyTokenSuccess: 'トークン認証成功',
     verifyTokenFailed: 'トークン認証失敗、もう一度お試しください'
   },
@@ -107,7 +103,6 @@ export default {
     sendCodeFailed: '認証コードの送信に失敗しました',
     configLoadFailed: '構成の読み込みに失敗しました、ページを更新してください'
   },
-  // ブラウザ制限ページ
   browserRestricted: {
     title: 'ブラウザのアクセスが制限されています',
     subtitle: '現在のブラウザはサポートされていません',
@@ -133,13 +128,11 @@ export default {
       Unknown: '不明なブラウザ'
     }
   },
-  // Landing page
   landing: {
     mainText: SITE_CONFIG.landingText['ja-JP'] || 'グローバルネットワークの無限の可能性を探る',
     scrollText: '下にスクロールしてログイン',
     exploreButton: '探索を開始'
   },
-  // 右键菜单
   contextMenu: {
     refresh: 'ページを更新',
     back: '前のページに戻る',
@@ -147,7 +140,6 @@ export default {
     copy: 'コピー',
     paste: '貼り付け'
   },
-  // 客服系统
   service: {
     title: 'オンラインサポート',
     description: 'サポートチームとリアルタイムでチャット',

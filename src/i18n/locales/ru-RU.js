@@ -1,6 +1,4 @@
-/**
- * 俄语语言包
- */
+﻿
 import { SITE_CONFIG } from '../../utils/baseConfig';
 
 export default {
@@ -56,12 +54,10 @@ export default {
     nextNotice: 'Следующее',
     noticeCount: 'Уведомление {current} из {total}',
     copied: 'Скопировано в буфер обмена',
-    // 顶部菜单
     userCenter: 'Центр пользователя',
     myWallet: 'Мой кошелек',
     changePassword: 'Изменить пароль',
     logoutText: 'Выйти',
-    // 新增二维码加载提示
     loadingQRCode: 'Генерация QR-кода...',
     qrCodeLoadFailed: 'Ошибка загрузки QR-кода',
     qrCodeGenerationFailed: 'Ошибка генерации QR-кода',
@@ -114,7 +110,6 @@ export default {
     captchaSuccess: 'Капча пройдена успешно',
     captchaFailed: 'Ошибка капчи',
     
-    // 验证令牌相关
     loginNow: 'Войти сейчас',
     resetNow: 'Сбросить пароль',
     alreadyHaveAccount: 'Уже есть аккаунт?',
@@ -132,14 +127,12 @@ export default {
     emailPrefixPlaceholder: 'Введите префикс электронной почты',
     newPasswordPlaceholder: 'Введите новый пароль',
     requiresAuth: 'Требуется вход',
-    // 验证码相关
     captcha: 'Капча',
     captchaRequired: 'Пройдите проверку капчи',
     captchaInvalid: 'Ошибка капчи, попробуйте снова',
     captchaExpired: 'Капча истекла, повторите проверку',
     captchaError: 'Ошибка капчи, попробуйте снова',
     captchaLoading: 'Загрузка капчи...',
-    // 令牌验证登录相关
     verifyTokenSuccess: 'Проверка токена успешна',
     verifyTokenFailed: 'Ошибка проверки токена, попробуйте снова'
   },
@@ -220,7 +213,6 @@ export default {
     unlimited: 'Без ограничений',
     nextResetTime: 'Время следующего сброса',
     
-    // 订阅导入模态框
     importTitle: 'Выберите способ импорта',
     copySubscription: 'Копировать адрес подписки',
     copySubscriptionDesc: 'Копировать ссылку подписки в буфер обмена',
@@ -240,23 +232,27 @@ export default {
     noClientsAvailable: 'Для этой платформы нет быстрого импорта',
     clientNotInstalled: 'Клиент не установлен, ссылка подписки скопирована в буфер обмена'
   },
-  // 平台选择器国际化
   platforms: {
     ios: 'iOS',
     android: 'Android',
     windows: 'Windows',
     macos: 'MacOS'
   },
-  // 导航菜单国际化
   menu: {
     dashboard: 'Панель управления',
     shop: 'Магазин',
     invite: 'Приглашение',
+    docs: 'Документы',
+    tickets: 'Тикеты',
+    orders: 'Заказы',
+    nodes: 'Узлы',
+    traffic: 'Трафик',
+    wallet: 'Кошелек',
+    profile: 'Профиль',
     more: 'Еще',
     commission: 'Комиссия',
     hotSale: 'Горячие продажи'
   },
-  // 更多页面
   more: {
     title: 'Дополнительные функции',
     description: 'Исследуйте больше функций и услуг',
@@ -266,7 +262,6 @@ export default {
     getTechnicalSupport: 'Получить техподдержку',
     manageProfile: 'Управление профилем'
   },
-  // 节点页面
   nodes: {
     title: 'Список узлов',
     loading: 'Загрузка узлов...',
@@ -293,7 +288,6 @@ export default {
     userInfoError: 'Ошибка получения информации пользователя',
     viewSubscribeLink: 'Посмотреть ссылку подписки'
   },
-  // 订单页面
   orders: {
     title: 'Список заказов',
     loading: 'Загрузка заказов...',
@@ -323,21 +317,17 @@ export default {
       discounted: 'Списан',
       unknown: 'Неизвестный статус'
     },
-    // 添加路由标题支持
     confirmOrder: 'Подтвердить заказ',
     payment: 'Оплатить заказ',
   },
-  // 工单页面
   tickets: {
     title: 'Система тикетов',
     description: 'Свяжитесь с нашей службой поддержки',
     
-    // 搜索和新建
     searchPlaceholder: 'Поиск тикетов...',
     newTicket: 'Новый тикет',
     createNew: 'Создать тикет',
     
-    // 表单字段
     subject: 'Тема',
     subjectPlaceholder: 'Введите тему тикета',
     message: 'Сообщение',
@@ -347,35 +337,29 @@ export default {
     levelMedium: 'Средний',
     levelHigh: 'Высокий',
     
-    // 状态
     statusOpen: 'В обработке',
     statusClosed: 'Закрыт',
     
-    // 提示文本
     noTickets: 'Нет тикетов',
     selectTicket: 'Выберите тикет для просмотра деталей',
     noMessages: 'Нет сообщений',
     loadingMessages: 'Загрузка сообщений...',
     loadingTickets: 'Загрузка тикетов...',
     
-    // 操作提示
     formIncomplete: 'Заполните все поля тикета',
     createSuccess: 'Тикет создан успешно',
     createError: 'Ошибка создания тикета',
     fetchError: 'Ошибка получения списка тикетов',
     fetchDetailError: 'Ошибка получения деталей тикета',
     
-    // 回复相关
     replyPlaceholder: 'Введите текст ответа...',
     send: 'Отправить',
     replySent: 'Ответ отправлен',
     replyError: 'Ошибка отправки ответа',
     
-    // 角色标识
     admin: 'Служба поддержки',
     you: 'Я',
     
-    // 关闭工单
     closeTicket: 'Закрыть тикет',
     closeConfirmTitle: 'Подтвердить закрытие тикета',
     closeConfirmText: 'Вы уверены, что хотите закрыть тикет? После закрытия ответить будет невозможно.',
@@ -384,25 +368,26 @@ export default {
     ticketClosed: 'Тикет закрыт, ответить нельзя',
     closing: 'Закрытие...',
     
-    // 时间相关
     createdAt: 'Дата создания',
     
-    // 小屏幕检测
     smallScreenNotice: 'Обнаружен маленький экран',
     switchToMobile: 'Для лучшего опыта переключитесь на мобильный вид',
     switchToMobileView: 'Переключиться на мобильный вид',
     
-    // 大屏幕检测
     largeScreenNotice: 'Обнаружен большой экран',
     switchToDesktop: 'Рекомендуется использовать настольную версию для лучшего опыта',
     switchToDesktopView: 'Переключиться на настольный вид',
-    // 弹窗
     popup: {
       close_btn: 'Закрыть',
       wait_close_btn: 'Закрыть через {seconds} с'
     }
+    ,
+    upPictures: 'Загрузить изображения',
+    uploadingImages: 'Загрузка...',
+    uploadTipText: 'Перетащите изображения сюда или нажмите для загрузки',
+    uploadDescText: 'Поддерживаются форматы JPG, PNG, GIF, до 5 МБ',
+    uploadSuccess: 'Изображение успешно загружено',
   },
-  // 用户中心
   profile: {
     title: 'Центр пользователя',
     basicInfo: 'Основная информация',
@@ -414,10 +399,13 @@ export default {
     createdAt: 'Дата создания',
     expiredAt: 'Дата окончания',
     notifications: 'Настройки уведомлений',
+    accountSettings: 'Настройки аккаунта',
     expireRemind: 'Напоминание об истечении',
     trafficRemind: 'Напоминание о трафике',
+    autoRenewal: 'Автопродление',
     expireRemindDesc: 'Получать письма о сроке действия аккаунта',
     trafficRemindDesc: 'Получать письма об исчерпании трафика',
+    autoRenewalDesc: 'Автоматически продлевать план при истечении',
     security: 'Настройки безопасности',
     changePassword: 'Изменить пароль',
     changePasswordTitle: 'Изменить пароль аккаунта',
@@ -458,14 +446,12 @@ export default {
     confirmLogout: 'Подтвердить выход',
     logoutDesc: 'Вы уверены, что хотите выйти?',
     logout: 'Выйти',
-    // 新增近期登录设备相关翻译
     recentDevices: 'Недавние устройства',
     noDevices: 'Нет записей о входе',
     unknownDevice: 'Неизвестное устройство',
     unknownIP: 'Неизвестный IP',
     unknownBrowser: 'Неизвестный браузер',
     sessionError: 'Ошибка получения записей о входе',
-    // Telegram相关翻译
     telegramGroup: 'Группа Telegram',
     telegramBot: 'Бот Telegram',
     bindTelegram: 'Привязать бота Telegram',
@@ -478,7 +464,6 @@ export default {
     telegram: 'Связь через Telegram',
     telegramError: 'Ошибка получения информации Telegram'
   },
-  // 右键菜单
   contextMenu: {
     refresh: 'Обновить страницу',
     back: 'Назад',
@@ -486,7 +471,6 @@ export default {
     copy: 'Копировать',
     paste: 'Вставить'
   },
-  // 客服系统
   service: {
     title: 'Онлайн-поддержка',
     description: 'Общайтесь с нашей службой поддержки в реальном времени',
@@ -555,7 +539,6 @@ export default {
       devices_desc: 'Одновременная поддержка нескольких устройств'
     },
     config_error: 'Ошибка загрузки конфигурации магазина',
-    // 弹窗相关
     popup: {
       close_btn: 'Понял',
       wait_close_btn: 'Подождите {seconds} сек'
@@ -666,7 +649,6 @@ export default {
       activate: 'Ожидает активации'
     }
   },
-  // 邀请页面
   invite: {
     title: 'Мои комиссии',
     description: 'Приглашайте друзей и получайте комиссионные.',
@@ -794,10 +776,10 @@ export default {
       }
     }
   },
-  // 文档页面相关翻译
   docs: {
     title: 'Центр документации',
     searchPlaceholder: 'Поиск документации...',
+    noAccessPrompt: 'У вас нет активного плана. Купите план, чтобы просматривать содержимое этого раздела',
     loading: 'Загрузка документации...',
     retry: 'Повторить',
     clearSearch: 'Очистить поиск',
@@ -817,7 +799,6 @@ export default {
       description: 'Найдите и прочитайте подробную документацию по использованию и настройке.'
     }
   },
-  // 浏览器限制页面
   browserRestricted: {
     title: 'Ограничение доступа браузера',
     subtitle: 'Текущий браузер не поддерживается',
@@ -843,7 +824,6 @@ export default {
       Unknown: 'Неизвестный браузер'
     }
   },
-  // 流量明细页面
   trafficLog: {
     title: 'Детали трафика',
     description: 'Просмотр записей использования трафика',
