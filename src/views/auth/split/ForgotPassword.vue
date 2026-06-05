@@ -414,7 +414,6 @@ import { resetPassword, sendEmailVerify, checkLoginStatus, getWebsiteConfig } fr
 
 
 
-import DomainAuthAlert from '@/components/common/DomainAuthAlert.vue';
 
 import { CAPTCHA_CONFIG, AUTH_LAYOUT_CONFIG, SITE_CONFIG, AUTH_CONFIG } from '@/utils/baseConfig';
 
@@ -505,7 +504,6 @@ export default {
 
     IconEyeOff,
 
-    DomainAuthAlert,
 
     AuthPopup
 

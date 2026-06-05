@@ -2,7 +2,6 @@
 
   <div class="more-container">
 
-    <!-- 域名授权验证提示 - 如果不需要域名授权功能，移除此组件即可 -->
 
 
 
@@ -352,7 +351,6 @@ import { useRouter } from 'vue-router';
 
 import { ref, onMounted, onUnmounted, computed } from 'vue';
 
-import DomainAuthAlert from '@/components/common/DomainAuthAlert.vue';
 
 
 

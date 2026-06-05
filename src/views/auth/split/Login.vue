@@ -153,7 +153,6 @@ import IconEyeOff from '@/components/icons/IconEyeOff.vue';
 import { login, checkLoginStatus } from '@/api/auth';
 import { validateEmail, validateRequired } from '@/utils/validators';
 
-import DomainAuthAlert from '@/components/common/DomainAuthAlert.vue';
 import { handleTokenLogin, hasVerifyToken } from '@/utils/tokenLogin';
 import { AUTH_LAYOUT_CONFIG, SITE_CONFIG, AUTH_CONFIG } from '@/utils/baseConfig';
 import AuthPopup from '@/components/auth/AuthPopup.vue';
@@ -170,7 +169,6 @@ export default {
     IconArrowRight,
     IconEye,
     IconEyeOff,
-    DomainAuthAlert,
     AuthPopup
   },
 

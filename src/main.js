@@ -1,9 +1,6 @@
-﻿import disableDevtool from "disable-devtool";
-
-const env = import.meta.env;
+﻿const env = import.meta.env;
 const isProd = env.MODE === "production";
 const enableConfigJS = env.VUE_APP_CONFIGJS == "true";
-const enableAntiDebugging = env.VUE_APP_DEBUGGING == "true";
 
 (async () => {
   try {
@@ -13,12 +10,7 @@ const enableAntiDebugging = env.VUE_APP_DEBUGGING == "true";
         window.EZ_CONFIG = res.config || res.default || res;
       }
     }
-    
-    // 反調試邏輯
-    if (isProd && enableAntiDebugging) {
-      disableDevtool()
-    }
-    
+
     // 確保在設定載入後再初始化應用。
     await import('./appInit.js');
   } catch (error) {

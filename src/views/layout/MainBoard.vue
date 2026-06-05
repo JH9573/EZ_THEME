@@ -2,7 +2,6 @@
 
   <div class="main-board">
 
-    <!-- 域名授权验证提示 - 如果不需要域名授权功能，移除此组件即可 -->
 
 
     
@@ -53,7 +52,6 @@ import { ref, onMounted } from 'vue';
 
 
 
-import DomainAuthAlert from '@/components/common/DomainAuthAlert.vue';
 
 
 
@@ -63,7 +61,6 @@ export default {
 
   components: {
 
-    DomainAuthAlert
 
   },
 

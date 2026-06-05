@@ -2,7 +2,6 @@
 
   <div class="auth-container">
 
-    <!-- 域名授权验证提示 -->
 
 
 
@@ -596,7 +595,6 @@ import { register, checkLoginStatus, getWebsiteConfig, sendEmailVerify } from '@
 
 
 
-import DomainAuthAlert from '@/components/common/DomainAuthAlert.vue';
 
 import { CAPTCHA_CONFIG, AUTH_CONFIG } from '@/utils/baseConfig';
 
@@ -663,7 +661,6 @@ export default {
 
     IconChevronDown,
 
-    DomainAuthAlert,
 
     AuthPopup
 

@@ -138,28 +138,6 @@ export const getApiBaseUrl = () => {
 export const API_BASE_URL = getApiBaseUrl();
 
 /**
- * 安全配置选项
- * 可以通过这些选项轻松启用或禁用各种安全功能
- */
-const DEFAULT_SECURITY_CONFIG = {
-    // 是否启用前端域名验证（前端域名检查，防止未授权域名访问）
-    enableFrontendDomainCheck: false,
-
-    // 是否启用授权码验证
-    enableLicenseCheck: true,
-};
-
-export const SECURITY_CONFIG = mergeDeep(DEFAULT_SECURITY_CONFIG, getConfig('SECURITY_CONFIG'));
-
-// 授权的前端域名列表
-const DEFAULT_AUTHORIZED_DOMAINS = [
-    'panghu.com',
-    // 在此处添加您授权的其他域名
-];
-
-export const AUTHORIZED_DOMAINS = getConfig('AUTHORIZED_DOMAINS', DEFAULT_AUTHORIZED_DOMAINS);
-
-/**
  * 验证码配置
  * 控制注册和登录页面的验证方式
  */

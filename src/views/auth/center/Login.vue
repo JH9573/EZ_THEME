@@ -2,7 +2,6 @@
 
   <div class="auth-container">
 
-    <!-- 域名授权验证提示 -->
 
 
 
@@ -268,7 +267,6 @@ import { validateEmail, validateRequired } from '@/utils/validators';
 
 
 
-import DomainAuthAlert from '@/components/common/DomainAuthAlert.vue';
 
 import { handleTokenLogin, hasVerifyToken } from '@/utils/tokenLogin';
 
@@ -300,7 +298,6 @@ export default {
 
     IconEyeOff,
 
-    DomainAuthAlert,
 
     AuthPopup
 

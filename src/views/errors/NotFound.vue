@@ -48,7 +48,6 @@ import { ref, onMounted } from 'vue';
 
 import { useRouter } from 'vue-router';
 
-import DomainAuthAlert from '@/components/common/DomainAuthAlert.vue';
 
 import { IconArrowLeft, IconHome } from '@tabler/icons-vue';
 
@@ -64,7 +63,6 @@ export default {
 
     IconHome,
 
-    DomainAuthAlert
 
   },
 
