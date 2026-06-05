@@ -62,6 +62,27 @@ else
   yellow "  首次部署请执行: echo 'EZ_API_BASE_URL=https://你的后端/api/v1' > deploy/api.env"
 fi
 
+# ---- 低内存保护:构建(vite + terser)较吃内存,小内存 VPS 易 OOM ----
+# 1) 加大 Node 堆上限
+export NODE_OPTIONS="${NODE_OPTIONS:---max-old-space-size=2048}"
+# 2) 内存(RAM+swap)不足 2GB 且为 root 时,自动创建 2G swap
+if command -v free >/dev/null 2>&1; then
+  TOTAL_MB=$(free -m | awk '/^Mem:/{m=$2} /^Swap:/{s=$2} END{print m+s}')
+  if [ "${TOTAL_MB:-0}" -lt 1900 ]; then
+    if [ "$(id -u)" -eq 0 ] && [ ! -f /swapfile ]; then
+      yellow "==> 检测到可用内存不足 2GB,自动创建 2G swap 以防构建 OOM"
+      fallocate -l 2G /swapfile 2>/dev/null || dd if=/dev/zero of=/swapfile bs=1M count=2048
+      chmod 600 /swapfile
+      mkswap /swapfile >/dev/null
+      swapon /swapfile
+      grep -q '/swapfile' /etc/fstab 2>/dev/null || echo '/swapfile none swap sw 0 0' >> /etc/fstab
+      green "swap 已启用" && free -h
+    else
+      yellow "==> 可用内存不足 2GB,若构建被 Killed/OOM,请手动加 swap(见 deploy README)"
+    fi
+  fi
+fi
+
 green "==> [3/5] 构建 (npm run build)"
 npm run build
 
