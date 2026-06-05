@@ -116,6 +116,11 @@ fi
 
 echo
 green "✅ 部署完成!"
-yellow "改配置方式:编辑 src/config/index.js → 提交推送 → 在 VPS 跑本脚本重新发版。"
-yellow "  (配置已打包进带哈希的 JS,文件名随内容变化,浏览器/CF 会自动取新版,无需清缓存)"
-yellow "  真实 API 地址不在仓库里,由 deploy/api.env 在构建时注入。"
+CONFIG_FILE="$(find "$WEB_ROOT" -maxdepth 1 -regextype posix-extended -regex '.*/[0-9]+\.[a-z0-9]+\.js' 2>/dev/null | head -1 || true)"
+if [ -n "$CONFIG_FILE" ]; then
+  yellow "外置配置文件:$CONFIG_FILE"
+  yellow "改配置两种方式:"
+  yellow "  A) 免构建快改:直接编辑上面这个文件 → 清一次 Cloudflare 缓存(或强刷)即生效"
+  yellow "  B) 正式改:编辑本地 src/config/index.js → 重新跑本脚本(随机文件名会变)"
+  yellow "  注:套了 CF 时建议加一条 Cache Rule 对该 .js 设 Bypass,改完就不用每次清缓存"
+fi
