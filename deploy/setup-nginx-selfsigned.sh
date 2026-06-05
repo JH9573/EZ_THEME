@@ -66,7 +66,19 @@ else
   ENABLE_LINK=""
 fi
 
-green "==> 写入 Nginx 配置:$CONF"
+# 按 nginx 版本选择 http2 写法:>=1.25.1 用 "http2 on;",旧版用 "listen ... http2"
+NGINX_VER="$(nginx -v 2>&1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
+ver_ge() { [ "$(printf '%s\n%s\n' "$1" "$2" | sort -V | head -1)" = "$2" ]; }
+if [ -n "$NGINX_VER" ] && ver_ge "$NGINX_VER" "1.25.1"; then
+  LISTEN4="listen 443 ssl default_server;"
+  LISTEN6="listen [::]:443 ssl default_server;"
+  HTTP2LINE="http2 on;"
+else
+  LISTEN4="listen 443 ssl http2 default_server;"
+  LISTEN6="listen [::]:443 ssl http2 default_server;"
+  HTTP2LINE="# http2 由上面的 listen 指令启用(nginx < 1.25.1)"
+fi
+green "==> 写入 Nginx 配置:$CONF (nginx ${NGINX_VER:-未知})"
 [ -f "$CONF" ] && cp "$CONF" "$CONF.bak.$(date +%s)" && yellow "已备份旧配置"
 
 cat > "$CONF" <<'NGINX_EOF'
@@ -81,8 +93,9 @@ server {
 }
 
 server {
-    listen 443 ssl http2 default_server;
-    listen [::]:443 ssl http2 default_server;
+    __LISTEN4__
+    __LISTEN6__
+    __HTTP2LINE__
     server_name _;
 
     ssl_certificate     __CERTDIR__/origin.pem;
@@ -123,8 +136,9 @@ server {
 }
 NGINX_EOF
 
-# 替换路径占位符
+# 替换占位符(路径 + listen/http2 写法)
 sed -i "s#__CERTDIR__#${CERT_DIR}#g; s#__WEBROOT__#${WEB_ROOT}#g" "$CONF"
+sed -i "s#__LISTEN4__#${LISTEN4}#g; s#__LISTEN6__#${LISTEN6}#g; s#__HTTP2LINE__#${HTTP2LINE}#g" "$CONF"
 
 # 启用本站,并移除会与 default_server 冲突的默认站点
 if [ -n "$ENABLE_LINK" ]; then
