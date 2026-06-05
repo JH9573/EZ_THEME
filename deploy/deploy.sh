@@ -46,20 +46,19 @@ if ! command -v npm >/dev/null 2>&1; then
 fi
 npm install --no-audit --no-fund
 
-# 注入真实 API 地址:仓库里只有占位符 https://xxxx.com/api/v1
-# 真实地址放在不入库的 deploy/api.env(已 gitignore),格式:
-#   EZ_API_BASE_URL=https://your-real-backend.com/api/v1
-API_ENV_FILE="$REPO_DIR/deploy/api.env"
-if [ -f "$API_ENV_FILE" ]; then
-  # shellcheck disable=SC1090
-  source "$API_ENV_FILE"
-fi
-if [ -n "${EZ_API_BASE_URL:-}" ]; then
-  green "==> 注入真实 API 地址(来自 deploy/api.env,不入库)"
-  sed -i "s#https://xxxx.com/api/v1#${EZ_API_BASE_URL}#g" src/config/index.js
-else
-  yellow "未找到 deploy/api.env 或未设置 EZ_API_BASE_URL,将使用仓库占位符 https://xxxx.com/api/v1"
-  yellow "  首次部署请执行: echo 'EZ_API_BASE_URL=https://你的后端/api/v1' > deploy/api.env"
+# 配置文件不入库:src/config/index.js 已 gitignore(本地私有),仓库只存模板
+# git reset --hard 不会删除未跟踪文件,所以你编辑过的真实配置会一直保留
+if [ ! -f src/config/index.js ]; then
+  if [ -f src/config/index.example.js ]; then
+    cp src/config/index.example.js src/config/index.js
+    red  "首次部署:已从模板创建 src/config/index.js"
+    yellow "请编辑该文件填入真实配置(后端地址、站点名、密钥等),然后重新运行本脚本:"
+    yellow "  vim src/config/index.js && ./deploy/deploy.sh"
+    exit 1
+  else
+    red "缺少 src/config/index.js,且未找到模板 src/config/index.example.js,无法构建"
+    exit 1
+  fi
 fi
 
 # ---- 低内存保护:构建(vite + terser)较吃内存,小内存 VPS 易 OOM ----
