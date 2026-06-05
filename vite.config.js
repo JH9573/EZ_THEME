@@ -50,6 +50,8 @@ export default defineConfig(({ mode }) => {
 
   return {
     base: './',
+    // 让 VUE_APP_* 变量参与 index.html 的 %VAR% 替换与 import.meta.env 注入
+    envPrefix: ['VITE_', 'VUE_APP_'],
     plugins: [
       vue(),
       createRuntimeConfigPlugin({
