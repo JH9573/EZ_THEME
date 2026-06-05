@@ -117,9 +117,6 @@ fi
 
 echo
 green "✅ 部署完成!"
-CONFIG_FILE="$(find "$WEB_ROOT" -maxdepth 1 -regextype posix-extended -regex '.*/[0-9]+\.[a-z0-9]+\.js' 2>/dev/null | head -1 || true)"
-if [ -n "$CONFIG_FILE" ]; then
-  yellow "外置配置文件:$CONFIG_FILE"
-  yellow "  → 临时改配置(后端地址/站点名)可直接编辑此文件后刷新,无需重新构建。"
-  yellow "  → 但再次运行本脚本会重新构建并覆盖它(文件名也会变)。"
-fi
+yellow "改配置方式:编辑 src/config/index.js → 提交推送 → 在 VPS 跑本脚本重新发版。"
+yellow "  (配置已打包进带哈希的 JS,文件名随内容变化,浏览器/CF 会自动取新版,无需清缓存)"
+yellow "  真实 API 地址不在仓库里,由 deploy/api.env 在构建时注入。"
