@@ -78,6 +78,21 @@ npm run build
 
 主题颜色、API和其他配置可以在 `src/config` 下文件中修改。
 
+### 网站 Logo
+
+为避免拉取最新代码时覆盖各部署方自定义的 logo，仓库**不再跟踪**主 logo 文件
+（`public/images/logo.png` 已加入 `.gitignore`）。
+
+首次部署时，请把自己的 logo 放到 `public/images/logo.png`，例如直接复制仓库提供的占位图：
+
+```bash
+cp public/images/logo.example.png public/images/logo.png
+```
+
+之后该文件由本地维护，`git pull` 不会再覆盖它。logo 在 `src/App.vue`、`index.html`、
+`public/index.html`、`public/landingpage.html` 中均通过 `/images/logo.png` 路径引用，
+更换图片无需改动代码。
+
 ## 浏览器支持
 
 - Chrome
