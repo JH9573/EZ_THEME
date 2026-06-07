@@ -1049,7 +1049,12 @@ export default {
         }
       } catch (error) {
         console.error('提前开启下月失败:', error);
-        showToast(t('dashboard.nextPeriodError'), 'error');
+        showToast(
+          error.response?.message ||
+            error.message ||
+            t('dashboard.nextPeriodError'),
+          'error'
+        );
       }
 
     }
