@@ -200,6 +200,14 @@ export default {
         nextPeriodSuccess:'Successfully started next month early',
         renewPlan: 'Renew Plan',
         noPlanToRenew: 'No plan available for renewal',
+        nextPeriodErrors: {
+            notAllowed: 'Starting a new traffic cycle early is not allowed',
+            trafficNotUsedUp: 'Your traffic has not been used up, cannot start a new cycle early',
+            notEnoughTime: 'Not enough remaining subscription time to start a new cycle',
+            invalidPeriod: 'Invalid plan reset period',
+            userNotExist: 'User does not exist',
+            saveFailed: 'Operation failed, please try again later'
+        },
         resetTrafficConfirm: 'Confirm Traffic Reset',
         resetTrafficDesc: 'This action will reset used traffic but will not extend the plan duration, continue?',
         resetTrafficSuccess: 'Traffic reset order created successfully',

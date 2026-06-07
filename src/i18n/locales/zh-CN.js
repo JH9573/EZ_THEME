@@ -200,6 +200,14 @@ export default {
         nextPeriodSuccess:'提前开启下月成功',
         renewPlan: '续费套餐',
         noPlanToRenew: '没有可续费的套餐',
+        nextPeriodErrors: {
+            notAllowed: '当前不允许提前开启流量周期',
+            trafficNotUsedUp: '流量尚未用尽，无法提前开启新周期',
+            notEnoughTime: '剩余订阅时长不足一个周期，无法提前开启',
+            invalidPeriod: '套餐重置周期无效，无法提前开启',
+            userNotExist: '用户不存在',
+            saveFailed: '操作失败，请稍后再试'
+        },
         resetTrafficConfirm: '确认重置流量',
         resetTrafficDesc: '此操作将重置已使用的流量但不会增加套餐时长，是否继续？',
         resetTrafficSuccess: '成功创建重置流量订单',

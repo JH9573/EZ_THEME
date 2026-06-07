@@ -197,6 +197,14 @@ export default {
     resetTraffic: '流量リセット',
     renewPlan: 'プラン更新',
     noPlanToRenew: '更新可能なプランがありません',
+    nextPeriodErrors: {
+      notAllowed: '現在、トラフィック周期を前倒しで開始することはできません',
+      trafficNotUsedUp: 'トラフィックをまだ使い切っていないため、新しい周期を前倒しできません',
+      notEnoughTime: '残りの契約期間が1周期分に満たないため、前倒しできません',
+      invalidPeriod: 'プランのリセット周期が無効です',
+      userNotExist: 'ユーザーが存在しません',
+      saveFailed: '操作に失敗しました。後でもう一度お試しください'
+    },
     resetTrafficConfirm: '流量リセット確認',
     resetTrafficDesc: 'この操作は使用済み流量をリセットしますが、プラン期間は延長されません。続行しますか？',
     resetTrafficSuccess: '流量リセット注文作成成功',

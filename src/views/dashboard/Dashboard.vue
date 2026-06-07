@@ -1038,6 +1038,28 @@ export default {
       // nextPeriod()
 
     };
+    // 后端 newPeriod 失败原因（英文原文）-> 多语言文案
+    const NEXT_PERIOD_ERROR_MAP = [
+      { test: /not used up your traffic/i, key: 'trafficNotUsedUp' },
+      { test: /not have enough time/i, key: 'notEnoughTime' },
+      { test: /not allow to renew|renewal is not allowed/i, key: 'notAllowed' },
+      { test: /invalid reset period/i, key: 'invalidPeriod' },
+      { test: /user does not exist/i, key: 'userNotExist' },
+      { test: /save failed/i, key: 'saveFailed' }
+    ];
+
+    const resolveNextPeriodError = (message) => {
+      if (message) {
+        for (const item of NEXT_PERIOD_ERROR_MAP) {
+          if (item.test.test(message)) {
+            return t(`dashboard.nextPeriodErrors.${item.key}`);
+          }
+        }
+      }
+      // 未匹配到已知原因：优先显示后端原文，否则回退到通用提示
+      return message || t('dashboard.nextPeriodError');
+    };
+
     const handlePopupConfirm = async () => {
       try {
         const response = await setNextPeriod()
@@ -1050,9 +1072,9 @@ export default {
       } catch (error) {
         console.error('提前开启下月失败:', error);
         showToast(
-          error.response?.message ||
-            error.message ||
-            t('dashboard.nextPeriodError'),
+          resolveNextPeriodError(
+            error.response?.message || error.message
+          ),
           'error'
         );
       }

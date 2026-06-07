@@ -197,6 +197,14 @@ export default {
     resetTraffic: '重設流量',
     renewPlan: '續費套餐',
     noPlanToRenew: '無可續費的套餐',
+    nextPeriodErrors: {
+      notAllowed: '目前不允許提前開啟流量週期',
+      trafficNotUsedUp: '流量尚未用盡，無法提前開啟新週期',
+      notEnoughTime: '剩餘訂閱時長不足一個週期，無法提前開啟',
+      invalidPeriod: '套餐重置週期無效，無法提前開啟',
+      userNotExist: '使用者不存在',
+      saveFailed: '操作失敗，請稍後再試'
+    },
     resetTrafficConfirm: '確認重設流量',
     resetTrafficDesc: '此操作將重設已使用的流量，但不增加套餐時長，是否繼續？',
     resetTrafficSuccess: '成功建立重設流量訂單',

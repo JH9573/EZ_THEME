@@ -199,6 +199,14 @@ export default {
         nextPeriodSuccess:'Kích hoạt sớm tháng sau thành công',
         renewPlan: 'Gia hạn gói cước',
         noPlanToRenew: 'Không có gói cước để gia hạn',
+        nextPeriodErrors: {
+            notAllowed: 'Hiện không cho phép kích hoạt sớm chu kỳ lưu lượng',
+            trafficNotUsedUp: 'Lưu lượng chưa dùng hết, không thể kích hoạt chu kỳ mới sớm',
+            notEnoughTime: 'Thời gian đăng ký còn lại không đủ một chu kỳ',
+            invalidPeriod: 'Chu kỳ đặt lại của gói không hợp lệ',
+            userNotExist: 'Người dùng không tồn tại',
+            saveFailed: 'Thao tác thất bại, vui lòng thử lại sau'
+        },
         resetTrafficConfirm: 'Xác nhận đặt lại lưu lượng',
         resetTrafficDesc: 'Thao tác này sẽ đặt lại lưu lượng đã sử dụng nhưng không tăng thời hạn gói cước, có tiếp tục không?',
         resetTrafficSuccess: 'Tạo đơn hàng đặt lại lưu lượng thành công',

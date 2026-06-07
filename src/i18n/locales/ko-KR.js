@@ -197,6 +197,14 @@ export default {
     resetTraffic: '트래픽 초기화',
     renewPlan: '플랜 갱신',
     noPlanToRenew: '갱신 가능한 플랜 없음',
+    nextPeriodErrors: {
+      notAllowed: '현재 트래픽 주기를 미리 시작할 수 없습니다',
+      trafficNotUsedUp: '트래픽을 아직 다 사용하지 않아 새 주기를 미리 시작할 수 없습니다',
+      notEnoughTime: '남은 구독 기간이 한 주기에 미치지 못해 미리 시작할 수 없습니다',
+      invalidPeriod: '요금제 초기화 주기가 유효하지 않습니다',
+      userNotExist: '사용자가 존재하지 않습니다',
+      saveFailed: '작업에 실패했습니다. 나중에 다시 시도해 주세요'
+    },
     resetTrafficConfirm: '트래픽 초기화 확인',
     resetTrafficDesc: '이 작업은 사용된 트래픽을 초기화하지만 플랜 기간은 연장되지 않습니다. 계속하시겠습니까?',
     resetTrafficSuccess: '트래픽 초기화 주문 생성 성공',

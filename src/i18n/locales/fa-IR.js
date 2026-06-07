@@ -197,6 +197,14 @@ export default {
     resetTraffic: 'بازنشانی ترافیک',
     renewPlan: 'تمدید بسته',
     noPlanToRenew: 'بسته ای برای تمدید وجود ندارد',
+    nextPeriodErrors: {
+      notAllowed: 'شروع زودهنگام دوره ترافیک مجاز نیست',
+      trafficNotUsedUp: 'ترافیک شما هنوز تمام نشده است و نمی‌توانید دوره جدید را زودتر شروع کنید',
+      notEnoughTime: 'زمان باقی‌مانده اشتراک برای یک دوره کافی نیست',
+      invalidPeriod: 'دوره بازنشانی پلن نامعتبر است',
+      userNotExist: 'کاربر وجود ندارد',
+      saveFailed: 'عملیات ناموفق بود، لطفاً بعداً دوباره تلاش کنید'
+    },
     resetTrafficConfirm: 'تایید بازنشانی ترافیک',
     resetTrafficDesc: 'این عمل ترافیک استفاده شده را بازنشانی می کند اما زمان بسته را افزایش نمی دهد، ادامه دهید؟',
     resetTrafficSuccess: 'سفارش بازنشانی ترافیک موفق',
