@@ -280,6 +280,36 @@ const DEFAULT_TICKET_CONFIG = {
         content: '<p>请您准确描述您的问题，再提交工单，以便我们更快帮助您。</p>',
         cooldownHours: 24,
         closeWaitSeconds: 0
+    },
+    // 诊断信息配置（创建工单时的选填诊断项）
+    diagnostic: {
+        // 是否启用诊断信息表单
+        enabled: true,
+        // 操作系统下拉选项
+        osOptions: [
+            'Windows',
+            'macOS',
+            'Linux',
+            'iOS',
+            'Android',
+            'HarmonyOS'
+        ],
+        // 使用客户端下拉选项
+        clientOptions: [
+            'Clash Verge',
+            'Clash for Windows',
+            'ClashX',
+            'Mihomo Party',
+            'Shadowrocket',
+            'Sing-box',
+            'v2rayN',
+            'V2rayNG',
+            'Stash',
+            'Surge',
+            'Quantumult X',
+            'Loon',
+            'Hiddify'
+        ]
     }
 };
 

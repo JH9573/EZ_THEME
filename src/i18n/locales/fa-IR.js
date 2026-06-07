@@ -387,6 +387,19 @@ export default {
     uploadTipText: 'تصاویر را اینجا بکشید و رها کنید یا برای آپلود کلیک کنید',
     uploadDescText: 'پشتیبانی از فرمت‌های JPG، PNG، GIF تا 5 مگابایت',
     uploadSuccess: 'تصویر با موفقیت آپلود شد',
+    diagnostic: {
+      title: 'اطلاعات تشخیصی',
+      optional: 'اختیاری',
+      desc: 'ارائه اطلاعات زیر به ما کمک می‌کند مشکل شما را سریع‌تر پیدا و حل کنیم.',
+      os: 'سیستم‌عامل',
+      client: 'کلاینت مورد استفاده',
+      region: 'منطقه و اپراتور',
+      regionPlaceholder: 'مثال: Shanghai Telecom، Beijing Mobile',
+      errorLog: 'پیام خطا یا لاگ',
+      errorLogPlaceholder: 'لطفاً پیام خطا یا لاگ کامل را اینجا قرار دهید',
+      pleaseSelect: '-- لطفاً انتخاب کنید --',
+      other: 'سایر'
+    }
   },
   profile: {
     title: 'مرکز کاربر',

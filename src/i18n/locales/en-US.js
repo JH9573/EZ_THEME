@@ -391,6 +391,19 @@ export default {
         uploadTipText: 'Drag and drop images here or click to upload',
         uploadDescText: 'Supports JPG, PNG, GIF formats, up to 5 MB',
         uploadSuccess: 'Image uploaded successfully',
+        diagnostic: {
+            title: 'Diagnostic Info',
+            optional: 'Optional',
+            desc: 'Providing the following information helps us locate and resolve your issue faster.',
+            os: 'Operating System',
+            client: 'Client App',
+            region: 'Region & ISP',
+            regionPlaceholder: 'e.g. Shanghai Telecom, Beijing Mobile',
+            errorLog: 'Error Message or Log',
+            errorLogPlaceholder: 'Please paste the complete error message or log',
+            pleaseSelect: '-- Please select --',
+            other: 'Other'
+        },
     },
     profile: {
         title: 'User Center',

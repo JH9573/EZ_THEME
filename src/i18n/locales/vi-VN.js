@@ -385,6 +385,19 @@ export default {
         uploadTipText: 'Kéo thả hình vào đây hoặc nhấn để tải lên',
         uploadDescText: 'Hỗ trợ định dạng JPG, PNG, GIF, tối đa 5 MB',
         uploadSuccess: 'Hình ảnh đã được tải lên thành công',
+        diagnostic: {
+            title: 'Thông tin chẩn đoán',
+            optional: 'Tùy chọn',
+            desc: 'Cung cấp các thông tin sau giúp chúng tôi xác định và giải quyết vấn đề của bạn nhanh hơn.',
+            os: 'Hệ điều hành',
+            client: 'Ứng dụng client',
+            region: 'Khu vực và nhà mạng',
+            regionPlaceholder: 'Ví dụ: Shanghai Telecom, Beijing Mobile',
+            errorLog: 'Thông báo lỗi hoặc nhật ký',
+            errorLogPlaceholder: 'Vui lòng dán đầy đủ thông báo lỗi hoặc nhật ký',
+            pleaseSelect: '-- Vui lòng chọn --',
+            other: 'Khác'
+        },
     },
     profile: {
         title: 'Trung tâm Người dùng',

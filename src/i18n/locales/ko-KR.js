@@ -388,6 +388,19 @@ export default {
     uploadTipText: '이미지를 이곳에 드래그하거나 클릭하여 업로드',
     uploadDescText: 'JPG, PNG, GIF 형식 지원, 최대 5 MB',
     uploadSuccess: '이미지 업로드 성공',
+    diagnostic: {
+      title: '진단 정보',
+      optional: '선택 사항',
+      desc: '다음 정보를 제공하시면 문제를 더 빠르게 파악하고 해결하는 데 도움이 됩니다.',
+      os: '운영 체제',
+      client: '사용 클라이언트',
+      region: '지역 및 통신사',
+      regionPlaceholder: '예: 상하이 텔레콤, 베이징 모바일 등',
+      errorLog: '오류 메시지 또는 로그',
+      errorLogPlaceholder: '전체 오류 메시지 또는 로그를 붙여넣어 주세요',
+      pleaseSelect: '-- 선택하세요 --',
+      other: '기타'
+    }
   },
   profile: {
     title: '사용자 센터',

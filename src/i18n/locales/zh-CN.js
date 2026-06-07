@@ -390,6 +390,19 @@ export default {
         uploadTipText: '拖拽图片到此处或点击上传',
         uploadDescText: '支持 JPG、PNG、GIF 格式，最大 5 MB',
         uploadSuccess: '图片上传成功',
+        diagnostic: {
+            title: '诊断信息',
+            optional: '选填',
+            desc: '提供以下信息可以帮助我们更快定位和解决您的问题。',
+            os: '操作系统',
+            client: '使用客户端',
+            region: '所在地区及运营商',
+            regionPlaceholder: '例如：上海电信、北京移动等',
+            errorLog: '错误提示或日志',
+            errorLogPlaceholder: '请粘贴完整的错误提示或日志信息',
+            pleaseSelect: '-- 请选择 --',
+            other: '其他'
+        },
     },
     profile: {
         title: '用户中心',

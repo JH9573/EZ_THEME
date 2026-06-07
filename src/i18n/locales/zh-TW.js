@@ -385,7 +385,20 @@ export default {
     uploadingImages: '上傳中...',
     uploadTipText: '拖曳圖片到此處或點擊上傳',
     uploadDescText: '支援 JPG、PNG、GIF 格式，最大 5 MB',
-    uploadSuccess: '圖片上傳成功'
+    uploadSuccess: '圖片上傳成功',
+    diagnostic: {
+      title: '診斷資訊',
+      optional: '選填',
+      desc: '提供以下資訊可以幫助我們更快定位並解決您的問題。',
+      os: '作業系統',
+      client: '使用客戶端',
+      region: '所在地區及電信業者',
+      regionPlaceholder: '例如：上海電信、北京移動等',
+      errorLog: '錯誤提示或日誌',
+      errorLogPlaceholder: '請貼上完整的錯誤提示或日誌資訊',
+      pleaseSelect: '-- 請選擇 --',
+      other: '其他'
+    }
   },
   profile: {
     title: '用戶中心',

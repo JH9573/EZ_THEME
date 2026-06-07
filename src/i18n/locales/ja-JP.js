@@ -387,6 +387,19 @@ export default {
     uploadTipText: 'ここに画像をドラッグ＆ドロップするか、クリックしてアップロード',
     uploadDescText: 'JPG、PNG、GIF 形式に対応、最大 5 MB',
     uploadSuccess: '画像アップロード成功',
+    diagnostic: {
+      title: '診断情報',
+      optional: '任意',
+      desc: '以下の情報をご提供いただくと、問題の特定と解決がより迅速になります。',
+      os: 'オペレーティングシステム',
+      client: '使用クライアント',
+      region: '地域および通信事業者',
+      regionPlaceholder: '例：上海電信、北京移動など',
+      errorLog: 'エラーメッセージまたはログ',
+      errorLogPlaceholder: '完全なエラーメッセージまたはログを貼り付けてください',
+      pleaseSelect: '-- 選択してください --',
+      other: 'その他'
+    }
   },
   profile: {
     title: 'ユーザーセンター',

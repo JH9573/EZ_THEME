@@ -394,6 +394,141 @@
                                 />
                             </div>
 
+                            <div
+                                v-if="diagnosticEnabled"
+                                class="form-group diagnostic-section"
+                            >
+                                <div class="diagnostic-panel">
+                                    <h4 class="diagnostic-title">
+                                        {{ $t('tickets.diagnostic.title') }}（{{
+                                            $t('tickets.diagnostic.optional')
+                                        }}）
+                                    </h4>
+
+                                    <p class="diagnostic-desc">
+                                        {{ $t('tickets.diagnostic.desc') }}
+                                    </p>
+
+                                    <div class="diagnostic-grid">
+                                        <div class="diagnostic-field">
+                                            <label>{{
+                                                $t('tickets.diagnostic.os')
+                                            }}</label>
+
+                                            <select
+                                                v-model="newTicket.diagnostic.os"
+                                            >
+                                                <option value="">
+                                                    {{
+                                                        $t(
+                                                            'tickets.diagnostic.pleaseSelect'
+                                                        )
+                                                    }}
+                                                </option>
+
+                                                <option
+                                                    v-for="opt in osOptions"
+                                                    :key="opt"
+                                                    :value="opt"
+                                                >
+                                                    {{ opt }}
+                                                </option>
+
+                                                <option
+                                                    :value="
+                                                        $t(
+                                                            'tickets.diagnostic.other'
+                                                        )
+                                                    "
+                                                >
+                                                    {{
+                                                        $t(
+                                                            'tickets.diagnostic.other'
+                                                        )
+                                                    }}
+                                                </option>
+                                            </select>
+                                        </div>
+
+                                        <div class="diagnostic-field">
+                                            <label>{{
+                                                $t('tickets.diagnostic.client')
+                                            }}</label>
+
+                                            <select
+                                                v-model="
+                                                    newTicket.diagnostic.client
+                                                "
+                                            >
+                                                <option value="">
+                                                    {{
+                                                        $t(
+                                                            'tickets.diagnostic.pleaseSelect'
+                                                        )
+                                                    }}
+                                                </option>
+
+                                                <option
+                                                    v-for="opt in clientOptions"
+                                                    :key="opt"
+                                                    :value="opt"
+                                                >
+                                                    {{ opt }}
+                                                </option>
+
+                                                <option
+                                                    :value="
+                                                        $t(
+                                                            'tickets.diagnostic.other'
+                                                        )
+                                                    "
+                                                >
+                                                    {{
+                                                        $t(
+                                                            'tickets.diagnostic.other'
+                                                        )
+                                                    }}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="diagnostic-field">
+                                        <label>{{
+                                            $t('tickets.diagnostic.region')
+                                        }}</label>
+
+                                        <input
+                                            type="text"
+                                            v-model="newTicket.diagnostic.region"
+                                            :placeholder="
+                                                $t(
+                                                    'tickets.diagnostic.regionPlaceholder'
+                                                )
+                                            "
+                                        />
+                                    </div>
+
+                                    <div class="diagnostic-field">
+                                        <label>{{
+                                            $t('tickets.diagnostic.errorLog')
+                                        }}</label>
+
+                                        <textarea
+                                            v-model="
+                                                newTicket.diagnostic.errorLog
+                                            "
+                                            :placeholder="
+                                                $t(
+                                                    'tickets.diagnostic.errorLogPlaceholder'
+                                                )
+                                            "
+                                            rows="4"
+                                        ></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="form-group">
                                 <label>{{ $t('tickets.level') }}</label>
 
@@ -701,7 +836,7 @@ import {
     getUserSubscribe
 } from '@/api/user';
 
-import { formatUserInfoForTicket } from '@/utils/formatters';
+import { formatUserInfoForTicket, formatDiagnosticInfo } from '@/utils/formatters';
 
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
 
@@ -939,8 +1074,20 @@ const newTicket = ref({
 
     message: '',
 
-    level: '0'
+    level: '0',
+
+    diagnostic: {
+        os: '',
+        client: '',
+        region: '',
+        errorLog: ''
+    }
 });
+
+// 诊断信息配置
+const diagnosticEnabled = TICKET_CONFIG.diagnostic?.enabled !== false;
+const osOptions = TICKET_CONFIG.diagnostic?.osOptions || [];
+const clientOptions = TICKET_CONFIG.diagnostic?.clientOptions || [];
 
 const filteredTickets = computed(() => {
     if (!searchQuery.value) return tickets.value;
@@ -1029,7 +1176,17 @@ const submitTicket = async () => {
             subscribeResponse
         );
 
-        const messageWithUserInfo = `${newTicket.value.message}\n\n${userInfoText}`;
+        const diagnosticText = diagnosticEnabled
+            ? formatDiagnosticInfo(newTicket.value.diagnostic, {
+                  title: t('tickets.diagnostic.title'),
+                  os: t('tickets.diagnostic.os'),
+                  client: t('tickets.diagnostic.client'),
+                  region: t('tickets.diagnostic.region'),
+                  errorLog: t('tickets.diagnostic.errorLog')
+              })
+            : '';
+
+        const messageWithUserInfo = `${newTicket.value.message}${diagnosticText}\n\n${userInfoText}`;
 
         const data = await createTicket({
             subject: newTicket.value.subject,
@@ -1272,7 +1429,14 @@ const closeModal = () => {
 
             message: '',
 
-            level: '0'
+            level: '0',
+
+            diagnostic: {
+                os: '',
+                client: '',
+                region: '',
+                errorLog: ''
+            }
         };
     }, 250);
 };
@@ -2866,6 +3030,85 @@ onUnmounted(() => {
         transform: scale(1);
 
         opacity: 1;
+    }
+}
+
+.diagnostic-section {
+    .diagnostic-panel {
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        background-color: var(--bg-secondary);
+        padding: 1.1rem 1.25rem 1.25rem;
+    }
+
+    .diagnostic-title {
+        margin: 0 0 0.4rem;
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--text-color);
+    }
+
+    .diagnostic-desc {
+        margin: 0 0 1rem;
+        font-size: 0.82rem;
+        line-height: 1.5;
+        color: var(--text-muted);
+    }
+
+    .diagnostic-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+
+        @media (max-width: 480px) {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .diagnostic-field {
+        margin-bottom: 1rem;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        select,
+        input,
+        textarea {
+            width: 100%;
+            padding: 0.7rem 0.85rem;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+
+            &:focus {
+                outline: none;
+                border-color: rgba(var(--theme-color-rgb), 0.5);
+                box-shadow: 0 2px 12px rgba(var(--theme-color-rgb), 0.1);
+            }
+
+            &::placeholder {
+                color: var(--text-muted);
+                opacity: 0.7;
+            }
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 90px;
+            line-height: 1.5;
+        }
     }
 }
 

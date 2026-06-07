@@ -387,6 +387,19 @@ export default {
     uploadTipText: 'Перетащите изображения сюда или нажмите для загрузки',
     uploadDescText: 'Поддерживаются форматы JPG, PNG, GIF, до 5 МБ',
     uploadSuccess: 'Изображение успешно загружено',
+    diagnostic: {
+      title: 'Диагностическая информация',
+      optional: 'Необязательно',
+      desc: 'Указание следующей информации поможет нам быстрее найти и решить вашу проблему.',
+      os: 'Операционная система',
+      client: 'Клиентское приложение',
+      region: 'Регион и оператор',
+      regionPlaceholder: 'Например: Shanghai Telecom, Beijing Mobile',
+      errorLog: 'Сообщение об ошибке или лог',
+      errorLogPlaceholder: 'Вставьте полное сообщение об ошибке или лог',
+      pleaseSelect: '-- Выберите --',
+      other: 'Другое'
+    }
   },
   profile: {
     title: 'Центр пользователя',

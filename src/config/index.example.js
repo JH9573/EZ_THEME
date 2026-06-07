@@ -489,6 +489,36 @@ export const config  = {
         isImageHosting: false, // 是否启用工单图片上传功能
         // imgBB 图床 api 设置 前往imgBB注册账号 https://imgbb.com/ 获取 apiKey
         imgbbApiKey: '',
+        // 诊断信息配置（创建工单时的选填诊断项，会附加到工单内容中）
+        diagnostic: {
+            // 是否启用诊断信息表单
+            enabled: true,
+            // 操作系统下拉选项
+            osOptions: [
+                'Windows',
+                'macOS',
+                'Linux',
+                'iOS',
+                'Android',
+                'HarmonyOS'
+            ],
+            // 使用客户端下拉选项
+            clientOptions: [
+                'Clash Verge',
+                'Clash for Windows',
+                'ClashX',
+                'Mihomo Party',
+                'Shadowrocket',
+                'Sing-box',
+                'v2rayN',
+                'V2rayNG',
+                'Stash',
+                'Surge',
+                'Quantumult X',
+                'Loon',
+                'Hiddify'
+            ]
+        },
     },
 
     // 流量明细配置
