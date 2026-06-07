@@ -197,6 +197,14 @@ export default {
     resetTraffic: '트래픽 초기화',
     renewPlan: '플랜 갱신',
     noPlanToRenew: '갱신 가능한 플랜 없음',
+    nextPeriodErrors: {
+      notAllowed: '현재 트래픽 주기를 미리 시작할 수 없습니다',
+      trafficNotUsedUp: '트래픽을 아직 다 사용하지 않아 새 주기를 미리 시작할 수 없습니다',
+      notEnoughTime: '남은 구독 기간이 한 주기에 미치지 못해 미리 시작할 수 없습니다',
+      invalidPeriod: '요금제 초기화 주기가 유효하지 않습니다',
+      userNotExist: '사용자가 존재하지 않습니다',
+      saveFailed: '작업에 실패했습니다. 나중에 다시 시도해 주세요'
+    },
     resetTrafficConfirm: '트래픽 초기화 확인',
     resetTrafficDesc: '이 작업은 사용된 트래픽을 초기화하지만 플랜 기간은 연장되지 않습니다. 계속하시겠습니까?',
     resetTrafficSuccess: '트래픽 초기화 주문 생성 성공',
@@ -388,6 +396,19 @@ export default {
     uploadTipText: '이미지를 이곳에 드래그하거나 클릭하여 업로드',
     uploadDescText: 'JPG, PNG, GIF 형식 지원, 최대 5 MB',
     uploadSuccess: '이미지 업로드 성공',
+    diagnostic: {
+      title: '진단 정보',
+      optional: '선택 사항',
+      desc: '다음 정보를 제공하시면 문제를 더 빠르게 파악하고 해결하는 데 도움이 됩니다.',
+      os: '운영 체제',
+      client: '사용 클라이언트',
+      region: '지역 및 통신사',
+      regionPlaceholder: '예: 상하이 텔레콤, 베이징 모바일 등',
+      errorLog: '오류 메시지 또는 로그',
+      errorLogPlaceholder: '전체 오류 메시지 또는 로그를 붙여넣어 주세요',
+      pleaseSelect: '-- 선택하세요 --',
+      other: '기타'
+    }
   },
   profile: {
     title: '사용자 센터',

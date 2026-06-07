@@ -197,6 +197,14 @@ export default {
     resetTraffic: '流量リセット',
     renewPlan: 'プラン更新',
     noPlanToRenew: '更新可能なプランがありません',
+    nextPeriodErrors: {
+      notAllowed: '現在、トラフィック周期を前倒しで開始することはできません',
+      trafficNotUsedUp: 'トラフィックをまだ使い切っていないため、新しい周期を前倒しできません',
+      notEnoughTime: '残りの契約期間が1周期分に満たないため、前倒しできません',
+      invalidPeriod: 'プランのリセット周期が無効です',
+      userNotExist: 'ユーザーが存在しません',
+      saveFailed: '操作に失敗しました。後でもう一度お試しください'
+    },
     resetTrafficConfirm: '流量リセット確認',
     resetTrafficDesc: 'この操作は使用済み流量をリセットしますが、プラン期間は延長されません。続行しますか？',
     resetTrafficSuccess: '流量リセット注文作成成功',
@@ -387,6 +395,19 @@ export default {
     uploadTipText: 'ここに画像をドラッグ＆ドロップするか、クリックしてアップロード',
     uploadDescText: 'JPG、PNG、GIF 形式に対応、最大 5 MB',
     uploadSuccess: '画像アップロード成功',
+    diagnostic: {
+      title: '診断情報',
+      optional: '任意',
+      desc: '以下の情報をご提供いただくと、問題の特定と解決がより迅速になります。',
+      os: 'オペレーティングシステム',
+      client: '使用クライアント',
+      region: '地域および通信事業者',
+      regionPlaceholder: '例：上海電信、北京移動など',
+      errorLog: 'エラーメッセージまたはログ',
+      errorLogPlaceholder: '完全なエラーメッセージまたはログを貼り付けてください',
+      pleaseSelect: '-- 選択してください --',
+      other: 'その他'
+    }
   },
   profile: {
     title: 'ユーザーセンター',

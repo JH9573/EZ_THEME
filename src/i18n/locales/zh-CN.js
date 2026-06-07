@@ -200,6 +200,14 @@ export default {
         nextPeriodSuccess:'提前开启下月成功',
         renewPlan: '续费套餐',
         noPlanToRenew: '没有可续费的套餐',
+        nextPeriodErrors: {
+            notAllowed: '当前不允许提前开启流量周期',
+            trafficNotUsedUp: '流量尚未用尽，无法提前开启新周期',
+            notEnoughTime: '剩余订阅时长不足一个周期，无法提前开启',
+            invalidPeriod: '套餐重置周期无效，无法提前开启',
+            userNotExist: '用户不存在',
+            saveFailed: '操作失败，请稍后再试'
+        },
         resetTrafficConfirm: '确认重置流量',
         resetTrafficDesc: '此操作将重置已使用的流量但不会增加套餐时长，是否继续？',
         resetTrafficSuccess: '成功创建重置流量订单',
@@ -390,6 +398,19 @@ export default {
         uploadTipText: '拖拽图片到此处或点击上传',
         uploadDescText: '支持 JPG、PNG、GIF 格式，最大 5 MB',
         uploadSuccess: '图片上传成功',
+        diagnostic: {
+            title: '诊断信息',
+            optional: '选填',
+            desc: '提供以下信息可以帮助我们更快定位和解决您的问题。',
+            os: '操作系统',
+            client: '使用客户端',
+            region: '所在地区及运营商',
+            regionPlaceholder: '例如：上海电信、北京移动等',
+            errorLog: '错误提示或日志',
+            errorLogPlaceholder: '请粘贴完整的错误提示或日志信息',
+            pleaseSelect: '-- 请选择 --',
+            other: '其他'
+        },
     },
     profile: {
         title: '用户中心',

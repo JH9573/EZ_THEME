@@ -182,6 +182,64 @@ export function formatDate(date, withTime = false) {
 
 
 
+export function formatDiagnosticInfo(diagnostic, labels = {}) {
+
+    if (!diagnostic) return '';
+
+
+
+    const data = typeof diagnostic === 'object' && diagnostic !== null ? diagnostic : {};
+
+
+
+    const lines = [];
+
+
+
+    if (data.os && String(data.os).trim()) {
+
+        lines.push(`${labels.os || '操作系统'}：${String(data.os).trim()}`);
+
+    }
+
+
+
+    if (data.client && String(data.client).trim()) {
+
+        lines.push(`${labels.client || '使用客户端'}：${String(data.client).trim()}`);
+
+    }
+
+
+
+    if (data.region && String(data.region).trim()) {
+
+        lines.push(`${labels.region || '所在地区及运营商'}：${String(data.region).trim()}`);
+
+    }
+
+
+
+    if (data.errorLog && String(data.errorLog).trim()) {
+
+        lines.push(`${labels.errorLog || '错误提示或日志'}：\n${String(data.errorLog).trim()}`);
+
+    }
+
+
+
+    if (!lines.length) return '';
+
+
+
+    return `\n-------------\n${labels.title || '诊断信息'}\n${lines.join('\n')}\n-------------\n`;
+
+}
+
+
+
+
+
 export function formatUserInfoForTicket(userInfo, ipInfo, userSubscribe = null) {
 
     const userData = userInfo.data ? userInfo.data : userInfo;
