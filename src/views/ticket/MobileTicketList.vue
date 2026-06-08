@@ -2235,6 +2235,15 @@ const addImageToInput = (imgUrl) => {
 
     max-width: 500px;
 
+    /* Constrain height so tall forms don't overflow the viewport on mobile.
+       Use dvh for iOS Safari where the dynamic toolbar changes the usable height. */
+    max-height: 90vh;
+    max-height: 90dvh;
+
+    display: flex;
+
+    flex-direction: column;
+
     background-color: var(--card-background);
 
     border-radius: 16px;
@@ -2253,6 +2262,8 @@ const addImageToInput = (imgUrl) => {
 }
 
 .modal-header {
+    flex-shrink: 0;
+
     padding: 1.5rem;
 
     border-bottom: 1px solid var(--border-color);
@@ -2305,6 +2316,17 @@ const addImageToInput = (imgUrl) => {
 }
 
 .modal-body {
+    /* Make the body the scrollable region so content is always reachable. */
+    flex: 1 1 auto;
+
+    min-height: 0;
+
+    overflow-y: auto;
+
+    -webkit-overflow-scrolling: touch;
+
+    overscroll-behavior: contain;
+
     padding: 1.5rem;
 
     background-color: var(--bg-color);
@@ -2420,6 +2442,8 @@ const addImageToInput = (imgUrl) => {
 }
 
 .modal-footer {
+    flex-shrink: 0;
+
     padding: 1.5rem;
 
     border-top: 1px solid var(--border-color);
