@@ -242,9 +242,9 @@ export function formatDiagnosticInfo(diagnostic, labels = {}) {
 
 export function formatUserInfoForTicket(userInfo, ipInfo, userSubscribe = null) {
 
-    const userData = userInfo.data ? userInfo.data : userInfo;
+    const userData = userInfo && userInfo.data ? userInfo.data : userInfo;
 
-    const ipData = ipInfo.data ? ipInfo.data : ipInfo;
+    const ipData = ipInfo && ipInfo.data ? ipInfo.data : ipInfo;
 
     const subscribeData = userSubscribe ? (userSubscribe.data ? userSubscribe.data : userSubscribe) : null;
 
@@ -328,11 +328,11 @@ export function formatUserInfoForTicket(userInfo, ipInfo, userSubscribe = null) 
 
 
     let currencySymbol = '¥';
-    if (userInfo.currency_symbol) {
+    if (userInfo && userInfo.currency_symbol) {
 
         currencySymbol = userInfo.currency_symbol;
 
-    } else if (userInfo.data && userInfo.data.currency_symbol) {
+    } else if (userInfo && userInfo.data && userInfo.data.currency_symbol) {
 
         currencySymbol = userInfo.data.currency_symbol;
 
@@ -348,7 +348,7 @@ export function formatUserInfoForTicket(userInfo, ipInfo, userSubscribe = null) 
 
 
 
-    if (sData) {
+    if (subscribeData) {
 
         transferEnable = sData.transfer_enable || 0;
 

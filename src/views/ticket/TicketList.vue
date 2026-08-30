@@ -800,9 +800,11 @@ import { useI18n } from 'vue-i18n';
 
 import { useRouter } from 'vue-router';
 
-import { createMarkdownRenderer, formatTicketTime, formatTicketTimeShort, shouldShowMessageSenderGroup } from './composables/ticketPresentation';
+import { createMarkdownRenderer, createFallbackRenderer, formatTicketTime, formatTicketTimeShort, shouldShowMessageSenderGroup } from './composables/ticketPresentation';
 
-const md = ref({ render: (content) => content || '' });
+import { buildTicketMessage, isDiagnosticEnabled } from './composables/ticketMessage';
+
+const md = ref(createFallbackRenderer());
 
 import {
     IconSearch,
@@ -828,15 +830,6 @@ import {
     replyTicket,
     closeTicket
 } from '@/api/ticket';
-
-import {
-    getUserInfo,
-    getIpLocationInfo,
-    getCommConfig,
-    getUserSubscribe
-} from '@/api/user';
-
-import { formatUserInfoForTicket, formatDiagnosticInfo } from '@/utils/formatters';
 
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
 
@@ -979,6 +972,9 @@ const handleImageUpload = async (e) => {
     }
 
     uploadingImages.value = false;
+
+    // 清空 input 值，避免同一文件无法再次触发 change
+    if (imageInput.value) imageInput.value.value = '';
 };
 
 // ========= 回复区上传图片 =========
@@ -1051,7 +1047,7 @@ const handleReplyImageUpload = async (e) => {
             const md = `![image](${url})`;
             await insertAtCursorToReply(md);
         }
-        showToast($t?.('tickets.uploadSuccess') || '图片上传成功', 'success');
+        showToast(t('tickets.uploadSuccess'), 'success');
     } catch (err) {
         console.error(err);
         showToast(err.message || '图片上传异常', 'error');
@@ -1062,12 +1058,6 @@ const handleReplyImageUpload = async (e) => {
     }
 };
 // ==================
-
-const errors = ref({
-    subject: '',
-
-    message: ''
-});
 
 const newTicket = ref({
     subject: '',
@@ -1085,7 +1075,7 @@ const newTicket = ref({
 });
 
 // 诊断信息配置
-const diagnosticEnabled = TICKET_CONFIG.diagnostic?.enabled !== false;
+const diagnosticEnabled = isDiagnosticEnabled();
 const osOptions = TICKET_CONFIG.diagnostic?.osOptions || [];
 const clientOptions = TICKET_CONFIG.diagnostic?.clientOptions || [];
 
@@ -1095,7 +1085,7 @@ const filteredTickets = computed(() => {
     const query = searchQuery.value.toLowerCase();
 
     return tickets.value.filter((ticket) =>
-        ticket.subject.toLowerCase().includes(query)
+        (ticket.subject || '').toLowerCase().includes(query)
     );
 });
 
@@ -1121,83 +1111,29 @@ const fetchTickets = async () => {
 };
 
 const submitTicket = async () => {
-    if (!newTicket.value.subject.trim()) {
-        errors.value.subject = t('tickets.subjectRequired');
+    if (!newTicket.value.subject.trim() || !newTicket.value.message.trim()) {
+        showToast(t('tickets.formIncomplete'), 'error');
 
         return;
-    } else {
-        errors.value.subject = '';
-    }
-
-    if (!newTicket.value.message.trim()) {
-        errors.value.message = t('tickets.messageRequired');
-
-        return;
-    } else {
-        errors.value.message = '';
     }
 
     isSubmitting.value = true;
 
     try {
-        const [
-            userInfoResponse,
-            commConfigResponse,
-            subscribeResponse,
-            ipLocationResponse
-        ] = await Promise.all([
-            getUserInfo(),
-
-            getCommConfig(),
-
-            getUserSubscribe(),
-
-            getIpLocationInfo().catch((error) => {
-                console.warn('Failed to get ticket IP location info:', error);
-
-                return null;
-            })
-        ]);
-
-        if (
-            commConfigResponse &&
-            commConfigResponse.data &&
-            commConfigResponse.data.currency_symbol
-        ) {
-            userInfoResponse.currency_symbol =
-                commConfigResponse.data.currency_symbol;
-        }
-
-        const userInfoText = formatUserInfoForTicket(
-            userInfoResponse,
-
-            ipLocationResponse,
-
-            subscribeResponse
-        );
-
-        const diagnosticText = diagnosticEnabled
-            ? formatDiagnosticInfo(newTicket.value.diagnostic, {
-                  title: t('tickets.diagnostic.title'),
-                  os: t('tickets.diagnostic.os'),
-                  client: t('tickets.diagnostic.client'),
-                  region: t('tickets.diagnostic.region'),
-                  errorLog: t('tickets.diagnostic.errorLog')
-              })
-            : '';
-
-        const messageWithUserInfo = `${newTicket.value.message}${diagnosticText}\n\n${userInfoText}`;
+        const messageContent = await buildTicketMessage(newTicket.value, t);
 
         const data = await createTicket({
-            subject: newTicket.value.subject,
+            subject: newTicket.value.subject.trim(),
 
-            message: messageWithUserInfo,
+            message: messageContent,
 
-            level: parseInt(newTicket.value.level)
+            level: parseInt(newTicket.value.level, 10)
         });
 
         if (data.data) {
             showToast(data.message || t('tickets.createSuccess'), 'success');
+
+            resetNewTicketForm();
 
             closeModal();
 
@@ -1415,6 +1351,28 @@ const modalCloseAnimation = ref(false);
 
 const overlayVisible = ref(false);
 
+// 手动关闭弹窗时保留草稿，只有提交成功后才重置表单
+const resetNewTicketForm = () => {
+    newTicket.value = {
+        subject: '',
+
+        message: '',
+
+        level: '0',
+
+        diagnostic: {
+            os: '',
+            client: '',
+            region: '',
+            errorLog: ''
+        }
+    };
+
+    uploadedImages.value = [];
+
+    if (imageInput.value) imageInput.value.value = '';
+};
+
 const closeModal = () => {
     modalCloseAnimation.value = true;
 
@@ -1424,20 +1382,6 @@ const closeModal = () => {
         showModal.value = false;
 
         modalCloseAnimation.value = false;
-        newTicket.value = {
-            subject: '',
-
-            message: '',
-
-            level: '0',
-
-            diagnostic: {
-                os: '',
-                client: '',
-                region: '',
-                errorLog: ''
-            }
-        };
     }, 250);
 };
 

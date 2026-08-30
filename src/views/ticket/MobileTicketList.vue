@@ -447,9 +447,12 @@
                             <label>{{ $t('tickets.message') }}</label>
 
                             <textarea
+                                ref="newTicketTextarea"
                                 v-model="newTicket.message"
                                 :placeholder="$t('tickets.messagePlaceholder')"
                                 rows="5"
+                                @keyup="updateCaret"
+                                @click="updateCaret"
                             ></textarea>
 
                             <div
@@ -632,14 +635,7 @@ import {
     closeTicket
 } from '@/api/ticket';
 
-import {
-    getUserInfo,
-    getIpLocationInfo,
-    getCommConfig,
-    getUserSubscribe
-} from '@/api/user';
-
-import { formatUserInfoForTicket, formatDiagnosticInfo } from '@/utils/formatters';
+import { buildTicketMessage, isDiagnosticEnabled } from './composables/ticketMessage';
 
 import { TICKET_CONFIG } from '@/utils/baseConfig';
 
@@ -691,7 +687,7 @@ const newTicket = ref({
 });
 
 // 诊断信息配置
-const diagnosticEnabled = TICKET_CONFIG.diagnostic?.enabled !== false;
+const diagnosticEnabled = isDiagnosticEnabled();
 const osOptions = TICKET_CONFIG.diagnostic?.osOptions || [];
 const clientOptions = TICKET_CONFIG.diagnostic?.clientOptions || [];
 
@@ -775,6 +771,28 @@ const showCreateTicketModal = () => {
     showModal.value = true;
 };
 
+// 手动关闭弹窗时保留草稿，只有提交成功后才重置表单
+const resetNewTicketForm = () => {
+    newTicket.value = {
+        subject: '',
+
+        message: '',
+
+        level: 0,
+
+        diagnostic: {
+            os: '',
+            client: '',
+            region: '',
+            errorLog: ''
+        }
+    };
+
+    uploadedImages.value = [];
+
+    if (imageInput.value) imageInput.value.value = '';
+};
+
 const closeModal = () => {
     const modalContent = document.querySelector('.modal-content');
 
@@ -783,32 +801,9 @@ const closeModal = () => {
 
         setTimeout(() => {
             showModal.value = false;
-
-            newTicket.value = {
-                subject: '',
-
-                message: '',
-
-                level: 0,
-
-                diagnostic: {
-                    os: '',
-                    client: '',
-                    region: '',
-                    errorLog: ''
-                }
-            };
         }, 300);
     } else {
         showModal.value = false;
-
-        newTicket.value = {
-            subject: '',
-
-            message: '',
-
-            level: 0
-        };
     }
 };
 
@@ -1019,7 +1014,7 @@ const closeSelectedTicket = async () => {
 };
 
 const submitTicket = async () => {
-    if (!newTicket.value.subject || !newTicket.value.message) {
+    if (!newTicket.value.subject.trim() || !newTicket.value.message.trim()) {
         showToast(t('tickets.formIncomplete'), 'error');
 
         return;
@@ -1028,87 +1023,24 @@ const submitTicket = async () => {
     submitting.value = true;
 
     try {
-        const diagnosticText = diagnosticEnabled
-            ? formatDiagnosticInfo(newTicket.value.diagnostic, {
-                  title: t('tickets.diagnostic.title'),
-                  os: t('tickets.diagnostic.os'),
-                  client: t('tickets.diagnostic.client'),
-                  region: t('tickets.diagnostic.region'),
-                  errorLog: t('tickets.diagnostic.errorLog')
-              })
-            : '';
-
-        let messageContent = `${newTicket.value.message}${diagnosticText}`;
-
-        if (TICKET_CONFIG.includeUserInfoInTicket) {
-            const [
-                userInfoResponse,
-                commConfigResponse,
-                subscribeResponse,
-                ipInfoResponse
-            ] = await Promise.all([
-                getUserInfo(),
-
-                getCommConfig(),
-
-                getUserSubscribe(),
-
-                getIpLocationInfo().catch((error) => {
-                    console.warn('Failed to get ticket IP location info:', error);
-
-                    return null;
-                })
-            ]);
-
-            if (
-                commConfigResponse &&
-                commConfigResponse.data &&
-                commConfigResponse.data.currency_symbol
-            ) {
-                userInfoResponse.currency_symbol =
-                    commConfigResponse.data.currency_symbol;
-            }
-
-            const userInfoText = formatUserInfoForTicket(
-                userInfoResponse,
-
-                ipInfoResponse,
-
-                subscribeResponse
-            );
-
-            messageContent = `${newTicket.value.message}${diagnosticText}\n\n${userInfoText}`;
-        }
+        const messageContent = await buildTicketMessage(newTicket.value, t);
 
         const data = await createTicket({
-            subject: newTicket.value.subject,
+            subject: newTicket.value.subject.trim(),
 
             message: messageContent,
 
-            level: parseInt(newTicket.value.level)
+            level: parseInt(newTicket.value.level, 10)
         });
 
         if (data.data) {
             showToast(data.message || t('tickets.createSuccess'), 'success');
 
+            resetNewTicketForm();
+
             closeModal();
 
             await fetchTickets();
-
-            newTicket.value = {
-                subject: '',
-
-                message: '',
-
-                level: '0',
-
-                diagnostic: {
-                    os: '',
-                    client: '',
-                    region: '',
-                    errorLog: ''
-                }
-            };
         }
     } catch (error) {
         console.error('Failed to create ticket:', error);
@@ -1141,8 +1073,6 @@ const checkTicketPopup = () => {
 const handleTicketPopupClose = () => {
     showTicketPopup.value = false;
 };
-
-fetchTickets();
 
 // 上传相关
 const uploadedImages = ref([]);
@@ -1249,6 +1179,9 @@ const handleImageUpload = async (e) => {
     }
 
     uploadingImages.value = false;
+
+    // 清空 input 值，避免同一文件无法再次触发 change
+    if (imageInput.value) imageInput.value.value = '';
 };
 
 // ========= 回复区上传图片 =========
@@ -1332,10 +1265,6 @@ const handleReplyImageUpload = async (e) => {
     }
 };
 // ==================
-
-const addImageToInput = (imgUrl) => {
-    newTicket.value.message += `\n![image](${imgUrl})`;
-};
 </script>
 
 <style lang="scss" scoped>
