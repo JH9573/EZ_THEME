@@ -396,6 +396,7 @@ export default {
     uploadTipText: '이미지를 이곳에 드래그하거나 클릭하여 업로드',
     uploadDescText: 'JPG, PNG, GIF 형식 지원, 최대 5 MB',
     uploadSuccess: '이미지 업로드 성공',
+    removeImage: '이미지 삭제',
     diagnostic: {
       title: '진단 정보',
       optional: '선택 사항',

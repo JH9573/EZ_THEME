@@ -395,6 +395,7 @@ export default {
     uploadTipText: 'ここに画像をドラッグ＆ドロップするか、クリックしてアップロード',
     uploadDescText: 'JPG、PNG、GIF 形式に対応、最大 5 MB',
     uploadSuccess: '画像アップロード成功',
+    removeImage: '画像を削除',
     diagnostic: {
       title: '診断情報',
       optional: '任意',

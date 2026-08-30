@@ -398,6 +398,7 @@ export default {
         uploadTipText: '拖拽图片到此处或点击上传',
         uploadDescText: '支持 JPG、PNG、GIF 格式，最大 5 MB',
         uploadSuccess: '图片上传成功',
+        removeImage: '删除图片',
         diagnostic: {
             title: '诊断信息',
             optional: '选填',

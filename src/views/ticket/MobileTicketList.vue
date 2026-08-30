@@ -447,12 +447,9 @@
                             <label>{{ $t('tickets.message') }}</label>
 
                             <textarea
-                                ref="newTicketTextarea"
                                 v-model="newTicket.message"
                                 :placeholder="$t('tickets.messagePlaceholder')"
                                 rows="5"
-                                @keyup="updateCaret"
-                                @click="updateCaret"
                             ></textarea>
 
                             <div
@@ -495,30 +492,24 @@
                             </div>
                             <div
                                 v-if="uploadedImages.length"
-                                style="margin-top: 8px"
+                                class="uploaded-thumbs"
                             >
-                                <span
-                                    v-for="img in uploadedImages"
+                                <div
+                                    v-for="(img, index) in uploadedImages"
                                     :key="img"
                                     class="thumb"
-                                    @click="insertImage(img)"
-                                    title="点击插入到内容"
-                                    style="
-                                        display: inline-block;
-                                        margin-right: 8px;
-                                        cursor: pointer;
-                                    "
                                 >
-                                    <img
-                                        :src="img"
-                                        style="
-                                            max-width: 60px;
-                                            max-height: 60px;
-                                            border-radius: 6px;
-                                            border: 1px solid #eee;
-                                        "
-                                    />
-                                </span>
+                                    <img :src="img" />
+
+                                    <button
+                                        type="button"
+                                        class="thumb-remove"
+                                        :title="$t('tickets.removeImage')"
+                                        @click="removeUploadedImage(index)"
+                                    >
+                                        <IconX :size="12" />
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1023,7 +1014,11 @@ const submitTicket = async () => {
     submitting.value = true;
 
     try {
-        const messageContent = await buildTicketMessage(newTicket.value, t);
+        const messageContent = await buildTicketMessage(
+            newTicket.value,
+            t,
+            uploadedImages.value
+        );
 
         const data = await createTicket({
             subject: newTicket.value.subject.trim(),
@@ -1080,42 +1075,9 @@ const uploadingImages = ref(false);
 const draggingImage = ref(false);
 const imageInput = ref(null);
 
-const newTicketTextarea = ref(null);
-const caretPos = ref(0);
-
-// 记录光标位置
-const updateCaret = () => {
-    const ta = newTicketTextarea.value;
-    if (!ta) return;
-    caretPos.value = ta.selectionStart ?? newTicket.value.message.length;
-};
-
-// 在光标处插入文本（支持选中覆盖）
-const insertAtCursor = async (text) => {
-    const ta = newTicketTextarea.value;
-    const value = newTicket.value.message || '';
-    if (!ta) {
-        // 没有拿到DOM，直接末尾追加
-        newTicket.value.message =
-            value + (value && !value.endsWith('\n') ? '\n' : '') + text + '\n';
-        return;
-    }
-    const start = ta.selectionStart ?? caretPos.value ?? value.length;
-    const end = ta.selectionEnd ?? start;
-    newTicket.value.message = value.slice(0, start) + text + value.slice(end);
-    await nextTick();
-    const pos = start + text.length;
-    ta.focus();
-    ta.setSelectionRange(pos, pos);
-    caretPos.value = pos;
-};
-
-// 点击缩略图时插入 Markdown
-const insertImage = (url) => {
-    const md = `![image](${url})`;
-    // 避免重复插入同一URL（可选）
-    if ((newTicket.value.message || '').includes(url)) return;
-    insertAtCursor(md);
+// 图片以缩略图列表管理，删除后提交时就不会带上这张图
+const removeUploadedImage = (index) => {
+    uploadedImages.value.splice(index, 1);
 };
 
 const IMGBB_API_URL = 'https://api.imgbb.com/1/upload';
@@ -1168,7 +1130,6 @@ const handleImageUpload = async (e) => {
             const result = await res.json();
             if (result.success && result.data && result.data.url) {
                 uploadedImages.value.push(result.data.url);
-                newTicket.value.message += `\n![image](${result.data.url})`;
             } else {
                 showToast(result.error?.message || '图片上传失败', 'error');
             }
@@ -2848,6 +2809,48 @@ const handleReplyImageUpload = async (e) => {
 
 .upload-icon {
     margin-bottom: 8px;
+}
+
+.uploaded-thumbs {
+    margin-top: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+
+    .thumb {
+        position: relative;
+
+        img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            display: block;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+        }
+
+        .thumb-remove {
+            position: absolute;
+            top: -7px;
+            right: -7px;
+            width: 20px;
+            height: 20px;
+            padding: 0;
+            border: none;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.65);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s;
+
+            &:hover {
+                background: #e53935;
+            }
+        }
+    }
 }
 
 .upload-tip {

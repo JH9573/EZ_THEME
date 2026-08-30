@@ -83,6 +83,28 @@ describe('buildTicketMessage', () => {
     expect(result).toBe('节点全部超时');
   });
 
+  it('把已上传图片以 Markdown 追加到正文（输入框里不含链接）', async () => {
+    configMock.TICKET_CONFIG.includeUserInfoInTicket = false;
+
+    const result = await buildTicketMessage(baseTicket(), t, [
+      'https://i.ibb.co/a.png',
+      'https://i.ibb.co/b.png'
+    ]);
+
+    expect(result).toBe(
+      '节点全部超时\n\n![image](https://i.ibb.co/a.png)\n![image](https://i.ibb.co/b.png)'
+    );
+  });
+
+  it('删除全部图片后正文不含图片 Markdown', async () => {
+    configMock.TICKET_CONFIG.includeUserInfoInTicket = false;
+
+    const result = await buildTicketMessage(baseTicket(), t, []);
+
+    expect(result).toBe('节点全部超时');
+    expect(result).not.toContain('![image]');
+  });
+
   it('附加已填写的诊断信息', async () => {
     configMock.TICKET_CONFIG.includeUserInfoInTicket = false;
 
