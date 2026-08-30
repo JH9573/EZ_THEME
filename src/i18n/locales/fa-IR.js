@@ -395,6 +395,7 @@ export default {
     uploadTipText: 'تصاویر را اینجا بکشید و رها کنید یا برای آپلود کلیک کنید',
     uploadDescText: 'پشتیبانی از فرمت‌های JPG، PNG، GIF تا 5 مگابایت',
     uploadSuccess: 'تصویر با موفقیت آپلود شد',
+    removeImage: 'حذف تصویر',
     diagnostic: {
       title: 'اطلاعات تشخیصی',
       optional: 'اختیاری',

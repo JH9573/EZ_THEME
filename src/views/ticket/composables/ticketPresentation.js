@@ -3,6 +3,19 @@ export const createMarkdownRenderer = async () => {
   return new MarkdownIt({ linkify: true, breaks: true });
 };
 
+const escapeHtml = (value) =>
+  String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+
+// markdown-it 加载完成前的兜底渲染器：输出会进 v-html，必须转义原文
+export const createFallbackRenderer = () => ({
+  render: (content) => escapeHtml(content || '').replace(/\n/g, '<br>')
+});
+
 export const formatTicketTime = (timestamp) => {
   if (!timestamp) return '--';
   const date = new Date(timestamp * 1000);

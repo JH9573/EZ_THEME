@@ -393,6 +393,7 @@ export default {
         uploadTipText: 'Kéo thả hình vào đây hoặc nhấn để tải lên',
         uploadDescText: 'Hỗ trợ định dạng JPG, PNG, GIF, tối đa 5 MB',
         uploadSuccess: 'Hình ảnh đã được tải lên thành công',
+        removeImage: 'Xóa ảnh',
         diagnostic: {
             title: 'Thông tin chẩn đoán',
             optional: 'Tùy chọn',

@@ -1,5 +1,7 @@
 ﻿
 
+import axios from 'axios';
+
 import request from './request';
 
 
@@ -24,14 +26,11 @@ export function getUserInfo() {
 
 export function getIpLocationInfo() {
 
-    return request({
+    // 第三方接口必须用裸 axios 请求：共享 request 实例的拦截器
+    // 会附加面板的 Authorization 和自定义请求头，不能发给站外服务
+    return axios.get('https://myip.ipip.net/json', { timeout: 10000 })
 
-        url: 'https://myip.ipip.net/json',
-
-        method: 'get',
-
-        baseURL: ''
-    });
+        .then(response => response.data);
 
 }
 

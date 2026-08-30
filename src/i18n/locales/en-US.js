@@ -399,6 +399,7 @@ export default {
         uploadTipText: 'Drag and drop images here or click to upload',
         uploadDescText: 'Supports JPG, PNG, GIF formats, up to 5 MB',
         uploadSuccess: 'Image uploaded successfully',
+        removeImage: 'Remove image',
         diagnostic: {
             title: 'Diagnostic Info',
             optional: 'Optional',

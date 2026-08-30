@@ -395,6 +395,7 @@ export default {
     uploadTipText: 'Перетащите изображения сюда или нажмите для загрузки',
     uploadDescText: 'Поддерживаются форматы JPG, PNG, GIF, до 5 МБ',
     uploadSuccess: 'Изображение успешно загружено',
+    removeImage: 'Удалить изображение',
     diagnostic: {
       title: 'Диагностическая информация',
       optional: 'Необязательно',
