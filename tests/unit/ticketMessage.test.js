@@ -17,7 +17,10 @@ const configMock = vi.hoisted(() => ({
 vi.mock('@/api/user', () => apiMocks);
 vi.mock('@/utils/baseConfig', () => configMock);
 
-import { buildTicketMessage } from '@/views/ticket/composables/ticketMessage';
+import {
+  buildTicketMessage,
+  appendImagesMarkdown
+} from '@/views/ticket/composables/ticketMessage';
 
 const t = (key) => key;
 
@@ -43,6 +46,25 @@ beforeEach(() => {
   });
   apiMocks.getIpLocationInfo.mockReset().mockResolvedValue({
     data: { ip: '1.2.3.4', location: ['中国', '上海'] }
+  });
+});
+
+describe('appendImagesMarkdown', () => {
+  it('文字后追加图片 Markdown', () => {
+    expect(appendImagesMarkdown('你好 ', ['https://a/1.png'])).toBe(
+      '你好\n\n![image](https://a/1.png)'
+    );
+  });
+
+  it('没有文字时仅由图片组成（支持纯图片回复）', () => {
+    expect(
+      appendImagesMarkdown('', ['https://a/1.png', 'https://a/2.png'])
+    ).toBe('![image](https://a/1.png)\n![image](https://a/2.png)');
+  });
+
+  it('没有图片时返回修剪后的文字', () => {
+    expect(appendImagesMarkdown('  hi  ', [])).toBe('hi');
+    expect(appendImagesMarkdown('  hi  ')).toBe('hi');
   });
 });
 

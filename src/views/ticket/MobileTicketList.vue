@@ -224,9 +224,29 @@
                         :placeholder="$t('tickets.replyPlaceholder')"
                         rows="3"
                         @keydown.ctrl.enter="sendReply"
-                        @keyup="updateReplyCaret"
-                        @click="updateReplyCaret"
                     ></textarea>
+
+                    <div
+                        v-if="uploadedReplyImages.length"
+                        class="uploaded-thumbs"
+                    >
+                        <div
+                            v-for="(img, index) in uploadedReplyImages"
+                            :key="img"
+                            class="thumb"
+                        >
+                            <img :src="img" />
+
+                            <button
+                                type="button"
+                                class="thumb-remove"
+                                :title="$t('tickets.removeImage')"
+                                @click="removeUploadedReplyImage(index)"
+                            >
+                                <IconX :size="12" />
+                            </button>
+                        </div>
+                    </div>
                     <div
                         class="reply-tools"
                         style="
@@ -258,7 +278,11 @@
                         <button
                             class="send-btn"
                             @click="sendReply"
-                            :disabled="!replyMessage.trim() || sendingReply"
+                            :disabled="
+                                (!replyMessage.trim() &&
+                                    !uploadedReplyImages.length) ||
+                                sendingReply
+                            "
                         >
                             <span v-if="sendingReply" class="loader"></span>
 
@@ -590,7 +614,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, computed, nextTick } from 'vue';
+import { ref, onMounted, onUnmounted, computed } from 'vue';
 
 import { useI18n } from 'vue-i18n';
 
@@ -626,7 +650,11 @@ import {
     closeTicket
 } from '@/api/ticket';
 
-import { buildTicketMessage, isDiagnosticEnabled } from './composables/ticketMessage';
+import {
+    buildTicketMessage,
+    appendImagesMarkdown,
+    isDiagnosticEnabled
+} from './composables/ticketMessage';
 
 import { TICKET_CONFIG } from '@/utils/baseConfig';
 
@@ -915,25 +943,24 @@ const fetchTickets = async () => {
 };
 
 const sendReply = async () => {
-    if (
-        !replyMessage.value.trim() ||
-        !selectedTicket.value ||
-        sendingReply.value
-    )
-        return;
+    const content = appendImagesMarkdown(
+        replyMessage.value,
+        uploadedReplyImages.value
+    );
+
+    if (!content || !selectedTicket.value || sendingReply.value) return;
 
     sendingReply.value = true;
 
     try {
-        const data = await replyTicket(
-            selectedTicket.value.id,
-            replyMessage.value
-        );
+        const data = await replyTicket(selectedTicket.value.id, content);
 
         if (data.data) {
             showToast(data.message || t('tickets.replySent'), 'success');
 
             replyMessage.value = '';
+
+            uploadedReplyImages.value = [];
 
             await fetchTicketDetail(selectedTicket.value.id, true);
         }
@@ -1147,36 +1174,15 @@ const handleImageUpload = async (e) => {
 
 // ========= 回复区上传图片 =========
 const replyImageInput = ref(null);
-const replyTextarea = ref(null);
 const uploadingReplyImages = ref(false);
-const replyCaretPos = ref(0);
+const uploadedReplyImages = ref([]);
 
 const triggerReplyImageInput = () => {
     replyImageInput.value && replyImageInput.value.click();
 };
 
-const updateReplyCaret = () => {
-    const ta = replyTextarea.value;
-    if (!ta) return;
-    replyCaretPos.value = ta.selectionStart ?? replyMessage.value.length;
-};
-
-const insertAtCursorToReply = async (text) => {
-    const ta = replyTextarea.value;
-    const value = replyMessage.value || '';
-    if (!ta) {
-        replyMessage.value =
-            value + (value && !value.endsWith('\n') ? '\n' : '') + text + '\n';
-        return;
-    }
-    const start = ta.selectionStart ?? replyCaretPos.value ?? value.length;
-    const end = ta.selectionEnd ?? start;
-    replyMessage.value = value.slice(0, start) + text + value.slice(end);
-    await nextTick();
-    const pos = start + text.length;
-    ta.focus();
-    ta.setSelectionRange(pos, pos);
-    replyCaretPos.value = pos;
+const removeUploadedReplyImage = (index) => {
+    uploadedReplyImages.value.splice(index, 1);
 };
 
 const fileToBase64 = (file) =>
@@ -1212,8 +1218,7 @@ const handleReplyImageUpload = async (e) => {
                 continue;
             }
             const url = await uploadToImgbb(file);
-            const md = `![image](${url})`;
-            await insertAtCursorToReply(md);
+            uploadedReplyImages.value.push(url);
         }
         showToast(t('tickets.uploadSuccess') || '图片上传成功', 'success');
     } catch (err) {

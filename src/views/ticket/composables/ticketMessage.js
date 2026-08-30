@@ -9,6 +9,17 @@ import { TICKET_CONFIG } from '@/utils/baseConfig';
 
 export const isDiagnosticEnabled = () => TICKET_CONFIG.diagnostic?.enabled !== false;
 
+// 图片在界面上以缩略图管理，不出现在输入框里，发送时才拼进内容
+export const appendImagesMarkdown = (message, images = []) => {
+  const trimmed = (message || '').trim();
+
+  if (!images.length) return trimmed;
+
+  const imagesText = images.map((url) => `![image](${url})`).join('\n');
+
+  return trimmed ? `${trimmed}\n\n${imagesText}` : imagesText;
+};
+
 export const buildTicketMessage = async (newTicket, t, images = []) => {
   const diagnosticText = isDiagnosticEnabled()
     ? formatDiagnosticInfo(newTicket.diagnostic, {
@@ -20,12 +31,7 @@ export const buildTicketMessage = async (newTicket, t, images = []) => {
       })
     : '';
 
-  // 图片在界面上以缩略图管理，不出现在输入框里，提交时才拼进正文
-  const imagesText = images.length
-    ? `\n\n${images.map((url) => `![image](${url})`).join('\n')}`
-    : '';
-
-  const message = `${(newTicket.message || '').trim()}${imagesText}${diagnosticText}`;
+  const message = `${appendImagesMarkdown(newTicket.message, images)}${diagnosticText}`;
 
   if (TICKET_CONFIG.includeUserInfoInTicket === false) {
     return message;
