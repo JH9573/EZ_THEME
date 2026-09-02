@@ -396,6 +396,11 @@ export default {
     uploadDescText: 'JPG、PNG、GIF 形式に対応、最大 5 MB',
     uploadSuccess: '画像アップロード成功',
     removeImage: '画像を削除',
+    imageTooLarge: '画像は5MB以下にしてください',
+    uploadFailed: '画像のアップロードに失敗しました',
+    uploadError: '画像のアップロード中にエラーが発生しました',
+    invalidImageType: '画像ファイルのみアップロードできます',
+    imageHostingNotConfigured: '画像ホスティングが設定されていません。管理者にお問い合わせください',
     diagnostic: {
       title: '診断情報',
       optional: '任意',

@@ -268,7 +268,11 @@ export function formatUserInfoForTicket(userInfo, ipInfo, userSubscribe = null) 
 
     if (Array.isArray(iData.location)) {
         // myip.ipip.net 格式: [国家, 省份, 城市, 区县, 运营商]
-        location = iData.location.filter(item => item && item.trim()).join(' ');
+        // 第 5 项对机房 IP 显示的是 IP 持有者域名（如 cloudinnovation.org），不展示
+        location = iData.location
+            .slice(0, 4)
+            .filter(item => item && String(item).trim())
+            .join(' ');
     } else if (iData.country) {
 
         location += iData.country;

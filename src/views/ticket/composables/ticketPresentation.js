@@ -36,6 +36,21 @@ export const formatTicketTimeShort = (timestamp) => {
     : `${date.getMonth() + 1}/${date.getDate()}`;
 };
 
+// 创建成功后要选中的工单：按创建时间取最新，时间相同再比 id，不依赖接口返回顺序
+export const findNewestTicket = (tickets = []) =>
+  tickets.reduce((newest, ticket) => {
+    if (!newest) return ticket;
+
+    const createdAt = Number(ticket.created_at) || 0;
+    const newestCreatedAt = Number(newest.created_at) || 0;
+
+    if (createdAt !== newestCreatedAt) {
+      return createdAt > newestCreatedAt ? ticket : newest;
+    }
+
+    return (Number(ticket.id) || 0) > (Number(newest.id) || 0) ? ticket : newest;
+  }, null);
+
 export const shouldShowMessageSenderGroup = (messages, index, isAdmin) => {
   if (index === 0) return true;
   const prevMessage = messages[index - 1];

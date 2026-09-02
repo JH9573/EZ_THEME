@@ -400,6 +400,11 @@ export default {
         uploadDescText: 'Supports JPG, PNG, GIF formats, up to 5 MB',
         uploadSuccess: 'Image uploaded successfully',
         removeImage: 'Remove image',
+        imageTooLarge: 'Image must not exceed 5MB',
+        uploadFailed: 'Image upload failed',
+        uploadError: 'An error occurred while uploading the image',
+        invalidImageType: 'Only image files can be uploaded',
+        imageHostingNotConfigured: 'Image hosting is not configured, please contact the administrator',
         diagnostic: {
             title: 'Diagnostic Info',
             optional: 'Optional',

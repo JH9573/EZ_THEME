@@ -396,6 +396,11 @@ export default {
     uploadDescText: 'پشتیبانی از فرمت‌های JPG، PNG، GIF تا 5 مگابایت',
     uploadSuccess: 'تصویر با موفقیت آپلود شد',
     removeImage: 'حذف تصویر',
+    imageTooLarge: 'حجم تصویر نباید بیشتر از ۵ مگابایت باشد',
+    uploadFailed: 'آپلود تصویر ناموفق بود',
+    uploadError: 'خطا در آپلود تصویر',
+    invalidImageType: 'فقط فایل‌های تصویری قابل آپلود هستند',
+    imageHostingNotConfigured: 'میزبانی تصویر پیکربندی نشده است، لطفاً با مدیر تماس بگیرید',
     diagnostic: {
       title: 'اطلاعات تشخیصی',
       optional: 'اختیاری',

@@ -399,6 +399,11 @@ export default {
         uploadDescText: '支持 JPG、PNG、GIF 格式，最大 5 MB',
         uploadSuccess: '图片上传成功',
         removeImage: '删除图片',
+        imageTooLarge: '图片不能超过 5MB',
+        uploadFailed: '图片上传失败',
+        uploadError: '图片上传异常',
+        invalidImageType: '只能上传图片文件',
+        imageHostingNotConfigured: '图床未配置，请联系管理员',
         diagnostic: {
             title: '诊断信息',
             optional: '选填',
