@@ -397,6 +397,11 @@ export default {
     uploadDescText: 'JPG, PNG, GIF 형식 지원, 최대 5 MB',
     uploadSuccess: '이미지 업로드 성공',
     removeImage: '이미지 삭제',
+    imageTooLarge: '이미지는 5MB를 초과할 수 없습니다',
+    uploadFailed: '이미지 업로드 실패',
+    uploadError: '이미지 업로드 중 오류가 발생했습니다',
+    invalidImageType: '이미지 파일만 업로드할 수 있습니다',
+    imageHostingNotConfigured: '이미지 호스팅이 설정되지 않았습니다. 관리자에게 문의하세요',
     diagnostic: {
       title: '진단 정보',
       optional: '선택 사항',

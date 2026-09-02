@@ -394,6 +394,11 @@ export default {
         uploadDescText: 'Hỗ trợ định dạng JPG, PNG, GIF, tối đa 5 MB',
         uploadSuccess: 'Hình ảnh đã được tải lên thành công',
         removeImage: 'Xóa ảnh',
+        imageTooLarge: 'Ảnh không được vượt quá 5MB',
+        uploadFailed: 'Tải ảnh lên thất bại',
+        uploadError: 'Đã xảy ra lỗi khi tải ảnh lên',
+        invalidImageType: 'Chỉ có thể tải lên tệp hình ảnh',
+        imageHostingNotConfigured: 'Dịch vụ lưu trữ ảnh chưa được cấu hình, vui lòng liên hệ quản trị viên',
         diagnostic: {
             title: 'Thông tin chẩn đoán',
             optional: 'Tùy chọn',

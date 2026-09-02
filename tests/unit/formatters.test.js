@@ -25,7 +25,7 @@ describe('formatUserInfoForTicket', () => {
     expect(text).toContain('创建工单的位置：--');
   });
 
-  it('解析 myip.ipip.net 返回的 IP 与位置信息', () => {
+  it('解析 myip.ipip.net 返回的 IP 与位置信息，不展示运营商字段', () => {
     const ipInfo = {
       data: {
         ip: '1.2.3.4',
@@ -35,7 +35,21 @@ describe('formatUserInfoForTicket', () => {
 
     const text = formatUserInfoForTicket(userInfo, ipInfo, null);
     expect(text).toContain('创建工单时的IP：1.2.3.4');
-    expect(text).toContain('中国 广东 深圳 电信');
+    expect(text).toContain('创建工单的位置：中国 广东 深圳\n');
+    expect(text).not.toContain('电信');
+  });
+
+  it('机房 IP 的持有者域名不会出现在位置里', () => {
+    const ipInfo = {
+      data: {
+        ip: '5.6.7.8',
+        location: ['中国', '香港', '', '', 'cloudinnovation.org']
+      }
+    };
+
+    const text = formatUserInfoForTicket(userInfo, ipInfo, null);
+    expect(text).toContain('创建工单的位置：中国 香港\n');
+    expect(text).not.toContain('cloudinnovation.org');
   });
 
   it('无订阅信息时流量数据回退到用户信息', () => {

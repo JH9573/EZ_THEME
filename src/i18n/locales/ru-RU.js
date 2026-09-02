@@ -396,6 +396,11 @@ export default {
     uploadDescText: 'Поддерживаются форматы JPG, PNG, GIF, до 5 МБ',
     uploadSuccess: 'Изображение успешно загружено',
     removeImage: 'Удалить изображение',
+    imageTooLarge: 'Размер изображения не должен превышать 5 МБ',
+    uploadFailed: 'Не удалось загрузить изображение',
+    uploadError: 'Ошибка при загрузке изображения',
+    invalidImageType: 'Можно загружать только изображения',
+    imageHostingNotConfigured: 'Хостинг изображений не настроен, обратитесь к администратору',
     diagnostic: {
       title: 'Диагностическая информация',
       optional: 'Необязательно',

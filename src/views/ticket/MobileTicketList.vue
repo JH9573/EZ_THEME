@@ -724,10 +724,21 @@ const switchToDesktopView = () => {
     router.push('/tickets');
 };
 
+// 页面重新可见时立即刷新一次，补上隐藏期间暂停的轮询
+const handleVisibilityChange = () => {
+    if (document.hidden) return;
+
+    if (selectedTicket.value && selectedTicket.value.status === 0) {
+        fetchTicketDetail(selectedTicket.value.id, true);
+    }
+};
+
 onMounted(() => {
     checkScreenSize();
 
     window.addEventListener('resize', checkScreenSize);
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
 
     fetchTickets();
 
@@ -736,6 +747,8 @@ onMounted(() => {
 
 onUnmounted(() => {
     window.removeEventListener('resize', checkScreenSize);
+
+    document.removeEventListener('visibilitychange', handleVisibilityChange);
 
     clearRefreshInterval();
 });
@@ -886,17 +899,30 @@ const setupRefreshInterval = (ticketId) => {
 
     if (selectedTicket.value && selectedTicket.value.status === 0) {
         refreshInterval.value = setInterval(() => {
-            if (selectedTicket.value && selectedTicket.value.id === ticketId) {
-                fetchTicketDetail(ticketId, true);
-            } else {
+            if (!selectedTicket.value || selectedTicket.value.id !== ticketId) {
                 clearRefreshInterval();
+                return;
             }
+
+            // 页面不可见时暂停轮询，切回来时由 visibilitychange 立即刷新
+            if (document.hidden) return;
+
+            fetchTicketDetail(ticketId, true);
         }, 5000);
     }
 };
 
+const replyDraftTicketId = ref(null);
+
 const selectTicket = async (ticket) => {
     clearRefreshInterval();
+
+    // 回复草稿只属于一个工单，切到别的工单时清空
+    if (replyDraftTicketId.value !== ticket.id) {
+        replyMessage.value = '';
+        uploadedReplyImages.value = [];
+        replyDraftTicketId.value = ticket.id;
+    }
 
     selectedTicket.value = ticket;
 
@@ -963,6 +989,8 @@ const sendReply = async () => {
             uploadedReplyImages.value = [];
 
             await fetchTicketDetail(selectedTicket.value.id, true);
+        } else {
+            showToast(data.message || t('tickets.replyError'), 'error');
         }
     } catch (error) {
         console.error('Failed to send reply:', error);
@@ -1018,6 +1046,8 @@ const closeSelectedTicket = async () => {
             clearRefreshInterval();
 
             backToList();
+        } else {
+            showToast(data.message || t('tickets.closeError'), 'error');
         }
     } catch (error) {
         console.error('Failed to close ticket:', error);
@@ -1063,6 +1093,8 @@ const submitTicket = async () => {
             closeModal();
 
             await fetchTickets();
+        } else {
+            showToast(data.message || t('tickets.createError'), 'error');
         }
     } catch (error) {
         console.error('Failed to create ticket:', error);
@@ -1109,81 +1141,7 @@ const removeUploadedImage = (index) => {
 
 const IMGBB_API_URL = 'https://api.imgbb.com/1/upload';
 const IMGBB_API_KEY = TICKET_CONFIG.imgbbApiKey;
-
-const triggerImageInput = () => {
-    imageInput.value && imageInput.value.click();
-};
-
-const onDropImage = async (e) => {
-    draggingImage.value = false;
-
-    const files = Array.from(e.dataTransfer.files).filter((f) =>
-        f.type.startsWith('image/')
-    );
-
-    if (files.length) {
-        await handleImageUpload({ target: { files } });
-    }
-};
-
-const handleImageUpload = async (e) => {
-    const files = Array.from(e.target.files);
-    if (!files.length) return;
-    uploadingImages.value = true;
-
-    for (const file of files) {
-        if (file.size > 5 * 1024 * 1024) {
-            showToast('图片不能超过 5MB', 'error');
-            continue;
-        }
-
-        try {
-            // 转成 base64
-            const base64 = await new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = () => resolve(reader.result.split(',')[1]);
-                reader.onerror = reject;
-                reader.readAsDataURL(file);
-            });
-
-            const formData = new FormData();
-            formData.append('image', base64);
-
-            const res = await fetch(`${IMGBB_API_URL}?key=${IMGBB_API_KEY}`, {
-                method: 'POST',
-                body: formData
-            });
-
-            const result = await res.json();
-            if (result.success && result.data && result.data.url) {
-                uploadedImages.value.push(result.data.url);
-            } else {
-                showToast(result.error?.message || '图片上传失败', 'error');
-            }
-        } catch (err) {
-            console.error(err);
-            showToast('图片上传异常', 'error');
-        }
-    }
-
-    uploadingImages.value = false;
-
-    // 清空 input 值，避免同一文件无法再次触发 change
-    if (imageInput.value) imageInput.value.value = '';
-};
-
-// ========= 回复区上传图片 =========
-const replyImageInput = ref(null);
-const uploadingReplyImages = ref(false);
-const uploadedReplyImages = ref([]);
-
-const triggerReplyImageInput = () => {
-    replyImageInput.value && replyImageInput.value.click();
-};
-
-const removeUploadedReplyImage = (index) => {
-    uploadedReplyImages.value.splice(index, 1);
-};
+const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
 
 const fileToBase64 = (file) =>
     new Promise((resolve, reject) => {
@@ -1203,27 +1161,93 @@ const uploadToImgbb = async (file) => {
     });
     const json = await res.json();
     if (json.success && json.data?.url) return json.data.url;
-    throw new Error(json.error?.message || 'imgbb 上传失败');
+    throw new Error(json.error?.message || t('tickets.uploadFailed'));
+};
+
+// 逐个校验并上传，成功的 URL 追加到 target；返回是否至少有一张上传成功
+const uploadImageFiles = async (files, target) => {
+    if (!IMGBB_API_KEY) {
+        showToast(t('tickets.imageHostingNotConfigured'), 'error');
+        return false;
+    }
+
+    let uploaded = false;
+
+    for (const file of files) {
+        if (!file.type.startsWith('image/')) {
+            showToast(t('tickets.invalidImageType'), 'error');
+            continue;
+        }
+
+        if (file.size > MAX_IMAGE_SIZE) {
+            showToast(t('tickets.imageTooLarge'), 'error');
+            continue;
+        }
+
+        try {
+            target.push(await uploadToImgbb(file));
+            uploaded = true;
+        } catch (err) {
+            console.error(err);
+            showToast(err.message || t('tickets.uploadError'), 'error');
+        }
+    }
+
+    return uploaded;
+};
+
+const triggerImageInput = () => {
+    imageInput.value && imageInput.value.click();
+};
+
+const onDropImage = async (e) => {
+    draggingImage.value = false;
+
+    const files = Array.from(e.dataTransfer.files || []);
+
+    if (files.length) {
+        await handleImageUpload({ target: { files } });
+    }
+};
+
+const handleImageUpload = async (e) => {
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
+
+    uploadingImages.value = true;
+
+    try {
+        await uploadImageFiles(files, uploadedImages.value);
+    } finally {
+        uploadingImages.value = false;
+        // 清空 input 值，避免同一文件无法再次触发 change
+        if (imageInput.value) imageInput.value.value = '';
+    }
+};
+
+// ========= 回复区上传图片 =========
+const replyImageInput = ref(null);
+const uploadingReplyImages = ref(false);
+const uploadedReplyImages = ref([]);
+
+const triggerReplyImageInput = () => {
+    replyImageInput.value && replyImageInput.value.click();
+};
+
+const removeUploadedReplyImage = (index) => {
+    uploadedReplyImages.value.splice(index, 1);
 };
 
 const handleReplyImageUpload = async (e) => {
     const files = Array.from(e.target.files || []);
     if (!files.length) return;
+
     uploadingReplyImages.value = true;
 
     try {
-        for (const file of files) {
-            if (file.size > 5 * 1024 * 1024) {
-                showToast('图片不能超过 5MB', 'error');
-                continue;
-            }
-            const url = await uploadToImgbb(file);
-            uploadedReplyImages.value.push(url);
+        if (await uploadImageFiles(files, uploadedReplyImages.value)) {
+            showToast(t('tickets.uploadSuccess'), 'success');
         }
-        showToast(t('tickets.uploadSuccess') || '图片上传成功', 'success');
-    } catch (err) {
-        console.error(err);
-        showToast(err.message || '图片上传异常', 'error');
     } finally {
         uploadingReplyImages.value = false;
         // 清空 input 值，避免同一文件无法再次触发 change
