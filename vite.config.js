@@ -39,6 +39,24 @@ const createRuntimeConfigPlugin = ({ enableConfigJS, extraScriptFileName }) => (
     } catch (err) {
       console.warn('生成獨立設定檔失敗:', err);
     }
+
+    // public/landingpage.html 原样拷贝进 dist,里面写死了 config.js;
+    // 改成本次构建的随机文件名,否则落地页拿不到 EZ_CONFIG(请求被 SPA 兜底成 index.html)
+    const landingPath = path.resolve(__dirname, 'dist', 'landingpage.html');
+    if (fs.existsSync(landingPath)) {
+      try {
+        const landing = fs.readFileSync(landingPath, 'utf-8');
+        const patched = landing.replace(/src="config\.js\?t=/g, `src="${extraScriptFileName}?t=`);
+        if (patched === landing) {
+          console.warn('landingpage.html 中未找到 config.js 引用,未改写');
+        } else {
+          fs.writeFileSync(landingPath, patched, 'utf-8');
+          console.log(`landingpage.html 已改用 ${extraScriptFileName}`);
+        }
+      } catch (err) {
+        console.warn('改写 landingpage.html 失败:', err);
+      }
+    }
   }
 });
 
